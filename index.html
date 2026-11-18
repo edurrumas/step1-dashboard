@@ -11,7 +11,8 @@
   · Semana (círculos lun–dom) ....... automática con la fecha del teléfono; número bajo cada día = H[fecha]
   · Anki hoy (anillo) ............... <section id="s-anki">: <div id="ring" data-done="635" data-goal="500">
                                       filas .kv: distintas / nuevas / repasos / vencidas (valor en <b>)
-  · Anki histograma ................. const H = {"YYYY-MM-DD": respuestas} en el <script>
+  · Anki por día (cuadritos) ........ const H = {"YYYY-MM-DD": respuestas} en el <script>; 1 cuadrito = 50;
+                                      líneas META 500 y MÍNIMO 250; colores: ≥500 / 250–499 / <250 / último día azul
                                       (rango de días: bucle new Date(2026,9,31) .. new Date(2026,10,17))
   · Resumen (antes "00") ............ <section id="s-resumen">: tarjetas .big (.v valor, .l etiqueta, .d detalle)
   · Biochem (tarjeta) ............... valor 10/28 y % en #s-resumen; mini barras #bioleds salen de const bio
@@ -91,13 +92,17 @@ h1{font-size:34px;font-weight:600;letter-spacing:-.03em;margin:4px 0 0;line-heig
 #bioleds i{flex:1;height:40%;background:var(--off);border-radius:2px}
 #bioleds i.on{background:var(--tx);height:70%}
 #bioleds i.half{background:var(--ac);height:100%}
-#hist{display:flex;align-items:flex-end;gap:4px;height:120px;position:relative;margin-top:6px}
-#hist .col{flex:1;height:100%;display:flex;align-items:flex-end}
-#hist .col i{display:block;width:100%;background:var(--off);border-radius:4px 4px 2px 2px;min-height:3px}
-#hist .col.goal i{background:var(--tx)}
-#hist .col.last i{background:var(--ac)}
-#hist .goalline{position:absolute;left:0;right:0;border-top:1px dashed var(--tx3);pointer-events:none}
-#hist .goalline span{position:absolute;left:0;top:-14px;font-family:var(--mono);font-size:9px;color:var(--tx2);background:var(--card);padding:0 3px}
+#hist{display:flex;align-items:flex-end;gap:3px;height:156px;position:relative;margin-top:16px}
+#hist .col{flex:1;height:100%;display:flex;flex-direction:column-reverse;gap:2px}
+#hist .col i{flex:1;background:var(--off);border-radius:2px}
+#hist .col.lo i.on{background:#c4c4c0}
+#hist .col.mid i.on{background:#8a8a87}
+#hist .col.goal i.on{background:var(--tx)}
+#hist .col.last i.on{background:var(--ac)}
+#hist .ln{position:absolute;left:0;right:0;pointer-events:none}
+#hist .ln span{position:absolute;left:0;top:-15px;font-family:var(--mono);font-size:9px;letter-spacing:.06em;background:var(--card);padding:0 4px 0 0}
+#hist .ln.g{border-top:1.5px solid var(--ac)}#hist .ln.g span{color:var(--ac)}
+#hist .ln.m{border-top:1px dashed var(--tx3)}#hist .ln.m span{color:var(--tx2)}
 #histx{display:flex;gap:4px;font-family:var(--mono);font-size:9px;color:var(--tx3);margin-top:6px}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--tx2);margin-top:10px}
 .legend span{display:inline-flex;align-items:center;gap:5px}.legend i{width:8px;height:8px;border-radius:2px;display:inline-block}
@@ -228,9 +233,9 @@ ul.ck li.todo{color:var(--tx2)}
 
 <!-- ANKI POR DÍA -->
 <section class="card w2" id="s-hist">
-  <h2>Respuestas Anki por día <i>meta 500</i></h2>
+  <h2>Anki por día <i>meta 500 · mín 250</i></h2>
   <div id="hist"></div><div id="histx"></div>
-  <div class="legend"><span><i style="background:var(--ac)"></i>Último día</span><span><i style="background:var(--tx)"></i>≥ 500</span><span><i style="background:var(--off)"></i>&lt; 500</span></div>
+  <div class="legend"><span><i style="background:var(--ac)"></i>Último día</span><span><i style="background:var(--tx)"></i>≥ 500</span><span><i style="background:#8a8a87"></i>250–499</span><span><i style="background:#c4c4c0"></i>&lt; 250</span><span>1 cuadrito = 50</span></div>
 </section>
 
 <!-- PRÓXIMO DÍA -->
@@ -418,10 +423,11 @@ const D={examen:"2027-04-30",uworld:"2027-04-29"};
 const H={"2026-10-31":44,"2026-11-02":73,"2026-11-03":87,"2026-11-04":4,"2026-11-05":229,"2026-11-07":226,"2026-11-10":205,"2026-11-11":310,"2026-11-12":346,"2026-11-13":303,"2026-11-14":552,"2026-11-15":239,"2026-11-16":430,"2026-11-17":635};
 const key=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 
-/* histograma */
+/* histograma de cuadritos: 1 cuadrito = 50 respuestas; líneas META 500 y MÍNIMO 250 */
 (function(){const days=[];for(let d=new Date(2026,9,31);d<=new Date(2026,10,17);d.setDate(d.getDate()+1)){const k=key(d);days.push([k,H[k]||0,d.getDate()])}
-const mx=Math.max(700,...days.map(d=>d[1])),h=document.getElementById("hist"),x=document.getElementById("histx");
-h.innerHTML=days.map((d,i)=>`<div class="col${i==days.length-1?' last':d[1]>=500?' goal':''}" title="${d[0]}: ${d[1]}"><i style="height:${d[1]/mx*100}%"></i></div>`).join("")+`<div class="goalline" style="bottom:${500/mx*100}%"><span>500</span></div>`;
+const U=50,SEG=Math.max(14,Math.ceil(Math.max(...days.map(d=>d[1]))/U)),mx=SEG*U,h=document.getElementById("hist"),x=document.getElementById("histx");
+h.innerHTML=days.map((d,i)=>{const on=d[1]>0?Math.max(1,Math.round(d[1]/U)):0,c=i==days.length-1?"last":d[1]>=500?"goal":d[1]>=250?"mid":"lo";let q="";for(let j=0;j<SEG;j++)q+=`<i class="${j<on?'on':''}"></i>`;return `<div class="col ${c}" title="${d[0]}: ${d[1]}">${q}</div>`}).join("")
++`<div class="ln g" style="bottom:${500/mx*100}%"><span>META 500</span></div><div class="ln m" style="bottom:${250/mx*100}%"><span>MÍNIMO 250</span></div>`;
 x.innerHTML=days.map((d,i)=>`<div style="flex:1;text-align:center">${(i%3==0||i==days.length-1)?d[2]:""}</div>`).join("")})();
 
 /* semana lun–dom actual; número = respuestas Anki de H */
