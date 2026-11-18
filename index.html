@@ -1,250 +1,326 @@
 <!DOCTYPE html>
 <!--
   DASHBOARD STEP 1 · MAPA DE DATOS (dónde vive cada valor)
-  Rediseño visual 17/11/2026 (estilo teenage engineering). Contenido idéntico al original.
-  Respaldo del original: index_backup_2026-11-17.html
+  Rediseño "app home" con tarjetas: 17/11/2026. Respaldos: index_backup_2026-11-17.html (original),
+  index_backup_pre_cards_2026-11-17.html (versión teenage engineering).
+  Regla: en pantalla NO se muestran notas de fuente/procedencia; solo el timestamp de #upd.
+  Fuentes (solo para mantenimiento): Anki = AnkiConnect en el MacBook Air (última lectura 17/11 7:52 PM);
+  B&B = cuenta Boards & Beyond, lectura 17/11 20:00; UWorld = cuenta UWorld STEP 1 QBank, lectura 17/11 20:08.
 
-  · Última actualización ............ <p id="upd">
-  · 00 Resumen (4 métricas) ......... <section id="s-resumen">, cada valor en .v / .l / .d
-  · 01 Anki (respuestas, nuevas...) . <section id="s-anki">, filas .blk (valor a la derecha)
-  · 01 Anki histograma .............. const H = {"YYYY-MM-DD": respuestas} en el <script>
+  · Timestamp ....................... <span id="upd">Actualizado DD/MM HH:MM</span>
+  · Semana (círculos lun–dom) ....... automática con la fecha del teléfono; número bajo cada día = H[fecha]
+  · Anki hoy (anillo) ............... <section id="s-anki">: <div id="ring" data-done="635" data-goal="500">
+                                      filas .kv: distintas / nuevas / repasos / vencidas (valor en <b>)
+  · Anki histograma ................. const H = {"YYYY-MM-DD": respuestas} en el <script>
                                       (rango de días: bucle new Date(2026,9,31) .. new Date(2026,10,17))
-  · 02 Boards & Beyond .............. <section id="s-bb">, métricas .m + nota .note
-  · 03 UWorld ....................... <section id="s-uw">, título h2 lleva la hora de lectura
-  · 04 Próximo día .................. <section id="s-next">; barra segmentada: atributo data-blocks
-                                      (bloques de 30 min) en cada .seg-part; filas .blk
-  · 05 Calendario planificado ....... const plan = [[fecha, contenido, estado]]  (estado: 1 | "curso" | vacío)
-  · 06 Biochemistry checklist ....... const bio = [[lección, 1 | "curso" | 0, detalle]]
-  · 07 Progreso por materia ......... const M = [[materia, "c"|"p"|"n", detalle "NN% · ..."]]
-                                      y filtros const F (contadores entre paréntesis)
-  · 08 Conexiones ................... <section id="s-con">, tabla; estado con .pill ok / .pill wa
-  Ids que usa el script: hist, histx, plan, bio, bioleds, seg, mat.
+  · Resumen (antes "00") ............ <section id="s-resumen">: tarjetas .big (.v valor, .l etiqueta, .d detalle)
+  · Biochem (tarjeta) ............... valor 10/28 y % en #s-resumen; mini barras #bioleds salen de const bio
+  · Boards & Beyond ................. <section id="s-bb">: barras finas .tb con data-v / data-max (y data-u = sufijo)
+  · UWorld .......................... <section id="s-uw">: barra .tb data-v="40" data-max="3667" + filas .kv + nota .note
+  · Cuenta regresiva ................ const D = {examen:"2027-04-30", uworld:"2027-04-29"} (días calculados en JS)
+  · Próximo día ..................... <section id="s-next">: h2 con el día; barra segmentada #daybar (data-blocks =
+                                      bloques de 30 min); filas .row con data-blocks (la barra fina sale de ahí)
+  · Próximos hitos .................. derivados de const plan (primeras 4 filas no completadas)
+  · Calendario planificado .......... const plan = [[fecha, contenido, estado]]  (estado: 1 | "curso" | vacío) → <details id="s-plan">
+  · Biochemistry checklist .......... const bio = [[lección, 1 | "curso" | 0, detalle]] → <details id="s-bio">
+  · Progreso por materia ............ const M = [[materia, "c"|"p"|"n", detalle "NN% · ..."]] y filtros const F → <details id="s-mat">
+  · Conexiones ...................... <section id="s-con" hidden> (no visible; estado con .pill ok / .pill wa)
+  Ids que usa el script: week, ring, hist, histx, plan, bio, bioleds, seg, mat, daybar, cd-ex, cd-uw, hitos.
 -->
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dashboard Step 1</title><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Step 1"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#eeeeec">
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Dashboard Step 1</title><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Step 1"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#f2f2f0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#eeeeec;--paper:#f6f6f4;--tx:#0d0d0d;--tx2:#6b6b6b;--tx3:#a3a3a0;
-  --rule:#0d0d0d;--hair:#cfcfcb;--ac:#1f4bff;--off:#d9d9d5;--wa:#0d0d0d;
-  --mono:"IBM Plex Mono","SF Mono",ui-monospace,Menlo,Consolas,"DejaVu Sans Mono",monospace;
-  --sans:"Helvetica Neue",Helvetica,"Inter",Arial,sans-serif;
+  --bg:#f2f2f0;--card:#fff;--tx:#111;--tx2:#6e6e6c;--tx3:#a9a9a6;--off:#e8e8e5;--line:#ececea;
+  --ac:#1f4bff;--acs:#e6ebff;
+  --mono:"IBM Plex Mono","SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:"Inter",-apple-system,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  --r:22px;--sh:0 1px 2px rgba(0,0,0,.04),0 6px 20px rgba(0,0,0,.04);
 }
 *{box-sizing:border-box}
 html{background:var(--bg)}
 body{margin:0;font-family:var(--sans);color:var(--tx);background:var(--bg);-webkit-font-smoothing:antialiased}
-b{font-weight:500}
-small{font-size:inherit}
-.wrap{max-width:1240px;margin:0 auto;padding:0 32px 80px}
+b{font-weight:600}
+.wrap{max-width:1180px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 16px 60px}
+.lbl{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx2);font-weight:500}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 
-/* top bar */
-.top{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;padding:28px 0 18px;border-bottom:2px solid var(--rule)}
-.brand{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx2);display:flex;gap:18px;flex-wrap:wrap}
-.brand i{font-style:normal;color:var(--ac)}
-h1{font-family:var(--sans);font-weight:500;font-size:44px;letter-spacing:-.03em;line-height:1;margin:14px 0 0;}
-h1 span{color:var(--ac)}
-.meta{font-family:var(--mono);font-size:11px;line-height:1.7;text-align:right;color:var(--tx2);}
-.meta p{margin:0}
-#upd{color:var(--tx)}
+/* header */
+.top{display:flex;justify-content:space-between;align-items:flex-end;margin:6px 4px 18px}
+h1{font-size:34px;font-weight:600;letter-spacing:-.03em;margin:4px 0 0;line-height:1}
+#upd{font-family:var(--mono);font-size:10px;color:var(--tx2);letter-spacing:.04em;background:var(--card);border-radius:99px;padding:6px 10px;box-shadow:var(--sh);white-space:nowrap}
 
-/* sections */
-section{margin-top:44px}
-.sh{display:grid;grid-template-columns:56px 1fr;align-items:baseline;border-bottom:1px solid var(--rule);padding-bottom:8px;margin-bottom:0}
-.sh .no{font-family:var(--mono);font-size:11px;color:var(--ac)}
-h2{font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin:0}
+/* week */
+#week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:0 0 16px}
+#week .d{display:flex;flex-direction:column;align-items:center;gap:6px}
+#week .d .c{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:500;background:var(--off);color:var(--tx2)}
+#week .d.past .c{background:var(--tx);color:#fff}
+#week .d.today .c{background:var(--ac);color:#fff}
+#week .d .n{font-family:var(--mono);font-size:9px;color:var(--tx3)}
+#week .d.today .n{color:var(--ac)}
 
-/* grids with hairline cells, no cards */
-.grid{display:grid;border-left:1px solid var(--hair)}
-.g4{grid-template-columns:repeat(4,1fr)}
-.g2{grid-template-columns:repeat(2,1fr)}
-.cell{border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:18px 18px 20px;min-width:0}
-.m .k{font-family:var(--mono);font-size:10px;color:var(--tx3);letter-spacing:.06em}
-.m .v{font-family:var(--sans);font-size:40px;font-weight:400;letter-spacing:-.03em;line-height:1;margin:22px 0 14px;font-variant-numeric:tabular-nums}
-.m .l{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:500}
-.m .d{font-family:var(--mono);font-size:11px;color:var(--tx2);margin-top:6px;line-height:1.5;}
-.cap{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--tx2);margin:0 0 10px;font-weight:500}
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{background:var(--card);border-radius:var(--r);padding:16px;box-shadow:var(--sh);min-width:0}
+.w2{grid-column:span 2}
+.card h2{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx2);font-weight:500;margin:0 0 12px;display:flex;justify-content:space-between;gap:8px}
+.card h2 i{font-style:normal;color:var(--ac)}
+.big .v{font-size:34px;font-weight:600;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.big .v small{font-size:16px;color:var(--tx3);font-weight:500;letter-spacing:0}
+.big .l{font-size:13px;font-weight:500;margin-top:8px}
+.big .d{font-size:11px;color:var(--tx2);margin-top:4px;line-height:1.45}
 
-/* spec rows */
-.blk{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--hair);font-family:var(--mono);font-size:12px}
-.blk:last-of-type{border-bottom:0}
-.blk b{text-transform:uppercase;letter-spacing:.05em;font-size:11px}
-.blk small{display:block;color:var(--tx2);margin-top:3px;font-size:11px}
-.blk>div:last-child{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
-.blk>div:last-child b{font-size:18px;font-family:var(--sans);letter-spacing:-.02em}
+/* ring */
+.ringwrap{display:flex;flex-direction:column;align-items:center}
+#ring{position:relative;width:128px;height:128px}
+#ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+#ring .in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#ring .in b{font-size:30px;letter-spacing:-.03em;line-height:1}
+#ring .in span{font-family:var(--mono);font-size:10px;color:var(--tx2);margin-top:4px}
+.badge{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:99px;background:var(--acs);color:var(--ac);margin-top:10px}
+.badge.no{background:var(--off);color:var(--tx2)}
+.kv{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;padding:7px 0;border-top:1px solid var(--line)}
+.kv span{color:var(--tx2)}
+.kv b{font-family:var(--mono);font-weight:500;font-size:12px}
+.kvs{margin-top:12px;align-self:stretch}
 
-.note{font-family:var(--mono);font-size:11px;line-height:1.6;color:var(--tx2);margin:14px 0 0;max-width:900px}
-.note::before{content:"※ ";color:var(--ac)}
+/* mini bars */
+#bioleds{display:flex;align-items:flex-end;gap:2px;height:44px;margin-top:14px}
+#bioleds i{flex:1;height:40%;background:var(--off);border-radius:2px}
+#bioleds i.on{background:var(--tx);height:70%}
+#bioleds i.half{background:var(--ac);height:100%}
+#hist{display:flex;align-items:flex-end;gap:4px;height:120px;position:relative;margin-top:6px}
+#hist .col{flex:1;height:100%;display:flex;align-items:flex-end}
+#hist .col i{display:block;width:100%;background:var(--off);border-radius:4px 4px 2px 2px;min-height:3px}
+#hist .col.goal i{background:var(--tx)}
+#hist .col.last i{background:var(--ac)}
+#hist .goalline{position:absolute;left:0;right:0;border-top:1px dashed var(--tx3);pointer-events:none}
+#hist .goalline span{position:absolute;left:0;top:-14px;font-family:var(--mono);font-size:9px;color:var(--tx2);background:var(--card);padding:0 3px}
+#histx{display:flex;gap:4px;font-family:var(--mono);font-size:9px;color:var(--tx3);margin-top:6px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--tx2);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:5px}.legend i{width:8px;height:8px;border-radius:2px;display:inline-block}
 
-/* tags / leds */
-.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;color:var(--tx2)}
-.pill::before{content:"";width:7px;height:7px;border-radius:50%;border:1px solid var(--tx3);background:transparent;flex:none}
-.pill.ok{color:var(--tx)}.pill.ok::before{background:var(--ac);border-color:var(--ac)}
-.pill.wa{color:var(--tx)}.pill.wa::before{background:linear-gradient(90deg,var(--tx) 50%,transparent 50%);border-color:var(--tx)}
-.led{display:inline-block;width:8px;height:8px;border-radius:50%;border:1px solid var(--tx3);margin-right:10px;vertical-align:0;flex:none}
-.led.on{background:var(--ac);border-color:var(--ac)}
-.led.half{background:linear-gradient(90deg,var(--tx) 50%,transparent 50%);border-color:var(--tx)}
-.sq{display:inline-block;width:10px;height:10px;margin-right:10px;vertical-align:-1px}
+/* thin bars */
+.tb{margin-top:12px}
+.tb .t{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;margin-bottom:6px;gap:8px}
+.tb .t span{color:var(--tx2)}
+.tb .t b{font-family:var(--mono);font-weight:500;font-size:11px;white-space:nowrap}
+.bar{height:6px;border-radius:99px;background:var(--off);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ac);border-radius:99px;min-width:3px}
+.bar.dk i{background:var(--tx)}
 
-/* segmented bars */
-.segbar{display:flex;gap:3px;margin:4px 0 18px}
-.segbar .s{flex:1;height:26px;background:var(--off)}
-.mini{display:inline-flex;gap:2px;vertical-align:middle}
-.mini i{width:6px;height:10px;background:var(--off)}
-.mini i.on{background:var(--ac)}
+/* next day */
+.daytop{display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+#daybar{display:flex;gap:3px;margin:14px 0 4px}
+#daybar .s{flex:1;height:22px;border-radius:5px}
+.row{display:grid;grid-template-columns:10px 1fr auto;gap:10px;align-items:start;padding:12px 0 0;margin-top:12px;border-top:1px solid var(--line)}
+.row .dot{width:10px;height:10px;border-radius:3px;margin-top:3px}
+.row b{font-size:13px;font-weight:600}
+.row small{display:block;color:var(--tx2);font-size:11px;line-height:1.45;margin-top:3px}
+.row .t{font-family:var(--mono);font-size:12px;white-space:nowrap}
+.row .bar{grid-column:2/4;margin-top:2px;height:4px}
 
-/* histogram */
-#hist{display:flex;align-items:flex-end;gap:4px;height:196px;margin-top:6px;position:relative}
-#hist .col{flex:1;display:flex;flex-direction:column-reverse;gap:2px;height:100%}
-#hist .col i{flex:1;background:var(--off)}
-#hist .col i.on{background:var(--tx)}
-#hist .col.goal i.on{background:var(--ac)}
-#hist .goalline{position:absolute;left:-6px;right:-6px;border-top:1px dashed var(--tx);pointer-events:none}
-#hist .goalline span{position:absolute;right:0;top:-15px;font-family:var(--mono);font-size:9px;background:var(--paper);padding:0 4px}
-#histx{display:flex;gap:4px;font-family:var(--mono);font-size:10px;color:var(--tx2);margin-top:6px}
-.legend{display:flex;gap:16px;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--tx2);margin-top:12px}
-.legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:8px;height:8px;display:inline-block}
+/* countdown */
+.cd{display:flex;flex-direction:column;gap:2px}
+.cd + .cd{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+
+.cdgrid{display:grid;grid-template-columns:1fr 1fr;column-gap:16px}
+.cdgrid h2{grid-column:1/-1}
+.cdgrid .cd + .cd{margin-top:0;padding-top:0;border-top:0;padding-left:16px;border-left:1px solid var(--line)}
+/* hitos */
+.hito{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:12px;line-height:1.4}
+.hito:first-of-type{border-top:0;padding-top:0}
+.hito .f{font-family:var(--mono);font-size:11px;color:var(--ac)}
+
+/* actions */
+.act{display:flex;flex-direction:column;justify-content:space-between;gap:14px}
+.act p{margin:0;font-size:15px;font-weight:600;letter-spacing:-.01em;line-height:1.25}
+.act p span{display:block;font-size:11px;color:var(--tx2);font-weight:400;margin-top:4px;letter-spacing:0}
+.btn{align-self:flex-start;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:#fff;background:var(--tx);padding:8px 14px;border-radius:99px}
+.btn.ac{background:var(--ac)}
+
+/* details */
+details.card{padding:0;margin-top:12px}
+details summary{list-style:none;cursor:pointer;padding:16px;display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:600}
+details summary::-webkit-details-marker{display:none}
+details summary .lbl{margin-left:auto;margin-right:10px}
+details summary::after{content:"+";font-family:var(--mono);font-size:16px;color:var(--ac);width:26px;height:26px;border-radius:50%;background:var(--acs);display:grid;place-items:center;flex:none}
+details[open] summary::after{content:"–"}
+details .body{padding:0 16px 16px}
+.sect-t{margin:22px 4px 10px}
 
 /* tables */
-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px}
-th{font-weight:500;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3);text-align:left;padding:12px 10px 8px 0;border-bottom:1px solid var(--rule)}
-td{padding:11px 10px 11px 0;border-bottom:1px solid var(--hair);vertical-align:top;text-align:left}
-td:first-child{white-space:nowrap}
-td small{color:var(--tx2);font-size:11px;line-height:1.5}
-td b{text-transform:uppercase;letter-spacing:.05em;font-size:11px}
-#plan tr td:first-child{color:var(--ac);}
-.n{color:var(--tx3);width:36px}
-
-/* filters */
-.seg{display:flex;flex-wrap:wrap;gap:0;margin:16px 0 6px;border:1px solid var(--rule);width:max-content;max-width:100%}
-.seg button{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;border:0;border-right:1px solid var(--rule);background:transparent;color:var(--tx);padding:8px 14px;cursor:pointer}
-.seg button:last-child{border-right:0}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{font-family:var(--mono);font-weight:500;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3);text-align:left;padding:8px 8px 8px 0;border-bottom:1px solid var(--line)}
+td{padding:10px 8px 10px 0;border-bottom:1px solid var(--line);vertical-align:top;text-align:left;line-height:1.4}
+tr:last-child td{border-bottom:0}
+#plan tr td:first-child{color:var(--ac);font-family:var(--mono);font-size:11px;white-space:nowrap}
+.n{color:var(--tx3);width:28px;font-family:var(--mono);font-size:10px}
+.pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;color:var(--tx2);padding:4px 8px;border-radius:99px;background:var(--off)}
+.pill.ok{background:var(--acs);color:var(--ac)}
+.pill.wa{background:var(--tx);color:#fff}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.seg button{font-family:var(--mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;border:0;background:var(--off);color:var(--tx);padding:7px 11px;border-radius:99px;cursor:pointer}
 .seg button.on{background:var(--ac);color:#fff}
-.seg button:hover:not(.on){background:var(--off)}
+.mini{display:inline-flex;gap:2px;vertical-align:middle}
+.mini i{width:5px;height:9px;border-radius:1px;background:var(--off)}
+.mini i.on{background:var(--ac)}
+#mat td:last-child{font-family:var(--mono);font-size:11px;color:var(--tx2);white-space:nowrap}
+ul.ck{list-style:none;padding:0;margin:0;font-size:12px;display:grid;grid-template-columns:1fr;column-gap:28px}
+ul.ck li{display:grid;grid-template-columns:24px 16px 1fr auto;align-items:center;gap:4px;padding:9px 0;border-bottom:1px solid var(--line)}
+ul.ck li .i{font-style:normal;font-family:var(--mono);color:var(--tx3);font-size:10px}
+ul.ck li span{font-family:var(--mono);color:var(--tx2);font-size:10px;text-align:right}
+ul.ck li.todo{color:var(--tx2)}
+.led{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--off)}
+.led.on{background:var(--ac)}.led.half{background:var(--tx)}
+.note{font-size:11px;line-height:1.5;color:var(--tx2);margin:12px 0 0}
+.foot{margin:30px 4px 0;font-family:var(--mono);font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;text-align:center}
 
-/* biochem checklist */
-ul.ck{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,1fr);grid-auto-flow:column;grid-template-rows:repeat(14,auto);column-gap:32px;font-family:var(--mono);font-size:12px}
-ul.ck li{display:grid;grid-template-columns:28px 18px 1fr auto;align-items:center;padding:8px 0;border-bottom:1px solid var(--hair)}
-ul.ck li .i{color:var(--tx3);font-size:10px}
-ul.ck li span{color:var(--tx2);font-size:10px;text-transform:uppercase;letter-spacing:.05em}
-ul.ck li.done{color:var(--tx)}ul.ck li.todo{color:var(--tx2)}
-#bioleds{display:flex;gap:3px;margin:16px 0 4px}
-#bioleds i{flex:1;height:14px;background:var(--off)}
-#bioleds i.on{background:var(--ac)}#bioleds i.half{background:repeating-linear-gradient(90deg,var(--tx) 0 2px,transparent 2px 4px)}
-
-.panel{background:var(--paper);padding:20px 22px 22px;border:1px solid var(--hair);border-top:0}
-.foot{margin-top:60px;border-top:2px solid var(--rule);padding-top:10px;display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em}
-
-@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g2{grid-template-columns:1fr}ul.ck{grid-template-columns:1fr;grid-auto-flow:row;grid-template-rows:none}h1{font-size:34px}}
-@media(max-width:560px){.wrap{padding:0 16px 60px}.g4{grid-template-columns:1fr}.top{grid-template-columns:1fr}.meta{text-align:left}.m .v{font-size:34px}.sh{grid-template-columns:40px 1fr}td:first-child{white-space:normal}}
-.brandwrap{display:flex;gap:14px;align-items:center}.logo{width:56px;height:56px;border-radius:12px;flex:none}</style></head><body><div class="wrap">
+@media(min-width:720px){
+  .wrap{padding:32px 28px 80px}
+  h1{font-size:42px}
+  .grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+  #week{max-width:520px}
+  #s-next{grid-row:span 2}
+  #s-cd,#s-hitos{grid-column:auto}
+  .cdgrid{display:block}
+  .cdgrid .cd + .cd{margin-top:14px;padding:14px 0 0;border-left:0;border-top:1px solid var(--line)}
+  .grid{align-items:start}
+  ul.ck{grid-template-columns:1fr 1fr;grid-auto-flow:column;grid-template-rows:repeat(14,auto)}
+  .card{padding:20px}
+}
+</style></head><body><div class="wrap">
 
 <header class="top">
-  <div class="brandwrap"><img class="logo" alt="logo" src="data:image/png;base64,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">
-  <div>
-    <div class="brand"><span><i>●</i> step&nbsp;1</span><span>usmle</span><span>rev. 2026</span></div>
-    <h1>USMLE Step 1 · <span>Dashboard de estudio</span></h1>
-  </div></div>
-  <div class="meta">
-    <p class="sub">Anki: dato leído de tu Mac. B&amp;B y UWorld: leídos de tu cuenta.</p>
-    <p class="upd" id="upd">Última actualización: 17/11/2026 20:10 (hora de Chicago)</p>
-  </div>
+  <div><div class="lbl">USMLE Step 1</div><h1>Inicio</h1></div>
+  <span id="upd">Actualizado 17/11 20:10</span>
 </header>
 
-<section id="s-resumen">
-<div class="sh"><span class="no">00</span><h2>Resumen</h2></div>
-<div class="grid g4">
-<div class="cell m"><div class="k">((1))</div><div class="v">2 / 22</div><div class="l">Materias B&amp;B completadas</div><div class="d">Genetics, Basic Pharmacology · Step 1: 5%</div></div>
-<div class="cell m"><div class="k">((2))</div><div class="v">10 / 28</div><div class="l">Temas Biochem</div><div class="d">36% · leído de tu cuenta B&amp;B · 17/11 20:00</div></div>
-<div class="cell m"><div class="k">((3))</div><div class="v">0</div><div class="l">Preguntas UWorld</div><div class="d">Ronda actual · empieza 18/11 · el test del 31/10 quedó abandonado</div></div>
-<div class="cell m"><div class="k">((4))</div><div class="v" style="color:var(--ac)">635</div><div class="l">Anki hoy</div><div class="d">Meta 500 cumplida · leído 7:52 PM</div></div>
-</div>
+<div id="week"></div>
+
+<div class="grid">
+
+<!-- ANKI HOY: anillo (data-done / data-goal) -->
+<section class="card ringwrap" id="s-anki">
+  <h2 style="align-self:stretch">Anki hoy <i>●</i></h2>
+  <div id="ring" data-done="635" data-goal="500"></div>
+  <span class="badge" id="ringbadge"></span>
+  <div class="kvs">
+    <div class="kv"><span>Distintas</span><b>344</b></div>
+    <div class="kv"><span>Nuevas</span><b>175</b></div>
+    <div class="kv"><span>Repasos</span><b>169</b></div>
+    <div class="kv"><span>Vencidas</span><b>23</b></div>
+  </div>
 </section>
 
-<section id="s-anki">
-<div class="sh"><span class="no">01</span><h2>Anki · leído de tu Mac</h2></div>
-<div class="grid g2">
-<div class="cell">
-<div class="blk"><div><b>Respuestas hoy</b><small>Meta mínima 500</small></div><div><b>635</b> &nbsp;<span class="pill ok">Cumplida</span></div></div>
-<div class="blk"><div><b>Tarjetas distintas hoy</b><small>Nuevas y repasos</small></div><div>344</div></div>
-<div class="blk"><div><b>Nuevas hoy</b><small>Sin cuota fija</small></div><div>175</div></div>
-<div class="blk"><div><b>Repasos hoy</b><small>Tarjetas distintas menos nuevas</small></div><div>169</div></div>
-<div class="blk"><div><b>Vencidas pendientes</b><small>A las 7:52 PM</small></div><div>23</div></div>
-<p class="note">Fuente: AnkiConnect en tu MacBook Air, última lectura 17/11/2026 7:52 PM (hora de Chicago). Solo se actualiza con tu Mac encendida y Anki abierto.</p></div>
-<div class="cell"><p class="cap">Respuestas por día</p><div id="hist"></div><div id="histx"></div>
-<div class="legend"><span><i style="background:var(--ac)"></i>≥ 500</span><span><i style="background:var(--tx)"></i>&lt; 500</span><span>1 segmento = 50</span></div>
-<p class="note">La línea punteada marca la meta de 500. Días sin barra: 0 respuestas.</p></div>
-</div>
+<!-- RESUMEN: Biochem + materias -->
+<section class="card big" id="s-resumen">
+  <h2>Biochem <i>36%</i></h2>
+  <div class="v">10<small>/28</small></div>
+  <div class="l">Temas Biochem</div>
+  <div class="d">Gluconeogenesis en curso</div>
+  <div id="bioleds"></div>
+  <div class="kv" style="margin-top:12px"><span>Materias B&amp;B</span><b>2 / 22</b></div>
+  <div class="d">Genetics, Basic Pharmacology</div>
 </section>
 
-<section id="s-bb">
-<div class="sh"><span class="no">02</span><h2>Boards &amp; Beyond · leído de tu cuenta</h2></div>
-<div class="grid g4">
-<div class="cell m"><div class="k">((1))</div><div class="v">5%</div><div class="l">Step 1 Preclinical</div><div class="d">22 materias · 499 videos</div></div>
-<div class="cell m"><div class="k">((2))</div><div class="v">36%</div><div class="l">Biochemistry</div><div class="d">10 / 28 lecciones completadas</div></div>
-<div class="cell m"><div class="k">((3))</div><div class="v">73 / 140</div><div class="l">Preguntas B&amp;B</div><div class="d">Respondidas en Biochemistry</div></div>
-<div class="cell m"><div class="k">((4))</div><div class="v">89%</div><div class="l">Quizzes B&amp;B</div><div class="d">Desempeño en Biochemistry</div></div>
-</div>
-<p class="note">leído de tu cuenta B&amp;B · 17/11 20:00 (hora de Chicago). Cell Biology y el resto de materias: 0%.</p>
+<!-- ANKI POR DÍA -->
+<section class="card w2" id="s-hist">
+  <h2>Respuestas Anki por día <i>meta 500</i></h2>
+  <div id="hist"></div><div id="histx"></div>
+  <div class="legend"><span><i style="background:var(--ac)"></i>Último día</span><span><i style="background:var(--tx)"></i>≥ 500</span><span><i style="background:var(--off)"></i>&lt; 500</span></div>
 </section>
 
-<section id="s-uw">
-<div class="sh"><span class="no">03</span><h2>UWorld · leído de tu cuenta · 17/11 20:08</h2></div>
-<div class="grid g4">
-<div class="cell m"><div class="k">((1))</div><div class="v">40 / 3667</div><div class="l">QBank usadas</div><div class="d">1% · 3627 sin usar · vence 29/04/2027</div></div>
-<div class="cell m"><div class="k">((2))</div><div class="v">0</div><div class="l">Ronda actual</div><div class="d">Empieza mañana</div></div>
-<div class="cell m"><div class="k">((3))</div><div class="v">1 test</div><div class="l">31/10/2026</div><div class="d">Tutored Untimed · abandonado (39 omitidas)</div></div>
-<div class="cell m"><div class="k">((4))</div><div class="v">UWSA 1–3</div><div class="l">Disponibles</div><div class="d">Sin activar · 14 días de validez al activar</div></div>
-</div>
-<p class="note">leído de tu cuenta UWorld · STEP 1 QBank · 17/11 20:08 (hora de Chicago). El único test es del 31/10/2026, Tutored Untimed, 40 preguntas: 0 correctas, 1 incorrecta y 39 omitidas (0%). Quedó abandonado; no es un desempeño real. Ronda actual: 0 preguntas, empieza mañana.</p>
+<!-- PRÓXIMO DÍA -->
+<section class="card w2" id="s-next">
+  <div class="daytop">
+    <div><h2 style="margin-bottom:6px">Mañana toca</h2><div style="font-size:20px;font-weight:600;letter-spacing:-.02em">miércoles 18/11</div></div>
+    <div class="num" style="font-size:13px;color:var(--tx2)">7 h 30 min</div>
+  </div>
+  <div id="daybar">
+    <div class="seg-part" data-blocks="7" data-c="var(--ac)"></div>
+    <div class="seg-part" data-blocks="5" data-c="var(--tx)"></div>
+    <div class="seg-part" data-blocks="2" data-c="#8a8a87"></div>
+    <div class="seg-part" data-blocks="1" data-c="#c4c4c0"></div>
+  </div>
+  <div class="row" data-blocks="7" data-c="var(--ac)"><span class="dot"></span><div><b>Anki</b><small>Mínimo 500 tarjetas, separando nuevas y repasos</small></div><span class="t">3 h 30</span></div>
+  <div class="row" data-blocks="5" data-c="var(--tx)"><span class="dot"></span><div><b>Videos B&amp;B</b><small>Gluconeogenesis (si no la terminas esta noche) + HMP Shunt (14:19); Fatty Acids (26:36) si hay tiempo</small></div><span class="t">2 h 30</span></div>
+  <div class="row" data-blocks="2" data-c="#8a8a87"><span class="dot"></span><div><b>UWorld + revisión</b><small>10 a 15 preguntas no usadas, modo tutor (separadas de las de B&amp;B)</small></div><span class="t">1 h</span></div>
+  <div class="row" data-blocks="1" data-c="#c4c4c0"><span class="dot"></span><div><b>Preguntas B&amp;B</b><small>De los temas del día, separadas de UWorld</small></div><span class="t">30 min</span></div>
 </section>
 
-<section id="s-next">
-<div class="sh"><span class="no">04</span><h2>Próximo día: miércoles 18/11 · 7 h 30 min</h2></div>
-<div class="panel">
-<p class="cap">bloques de 30 min</p>
-<div class="segbar" id="daybar">
-  <div class="seg-part" data-blocks="7" data-c="var(--ac)"></div>
-  <div class="seg-part" data-blocks="5" data-c="var(--tx)"></div>
-  <div class="seg-part" data-blocks="2" data-c="#7a7a77"></div>
-  <div class="seg-part" data-blocks="1" data-c="#b8b8b4"></div>
-</div>
-<div class="blk"><div><span class="sq" style="background:var(--ac)"></span><b>Anki</b><small>Mínimo 500 tarjetas, separando nuevas y repasos</small></div><div>3 h 30 min</div></div>
-<div class="blk"><div><span class="sq" style="background:var(--tx)"></span><b>Videos B&amp;B</b><small>Gluconeogenesis (si no la terminas esta noche) + HMP Shunt (14:19); Fatty Acids (26:36) si hay tiempo</small></div><div>2 h 30 min</div></div>
-<div class="blk"><div><span class="sq" style="background:#7a7a77"></span><b>UWorld + revisión</b><small>10 a 15 preguntas no usadas, modo tutor (separadas de las de B&amp;B)</small></div><div>1 h</div></div>
-<div class="blk"><div><span class="sq" style="background:#b8b8b4"></span><b>Preguntas B&amp;B</b><small>De los temas del día, separadas de UWorld</small></div><div>30 min</div></div>
-</div>
+<!-- BOARDS & BEYOND: barras finas data-v / data-max -->
+<section class="card w2" id="s-bb">
+  <h2>Boards &amp; Beyond <i>Step 1 · 5%</i></h2>
+  <div class="tb" data-v="5" data-max="100" data-u="%"><div class="t"><span>Step 1 Preclinical · 22 materias · 499 videos</span><b></b></div><div class="bar"><i></i></div></div>
+  <div class="tb" data-v="10" data-max="28"><div class="t"><span>Biochemistry · lecciones</span><b></b></div><div class="bar"><i></i></div></div>
+  <div class="tb" data-v="73" data-max="140"><div class="t"><span>Preguntas B&amp;B · Biochemistry</span><b></b></div><div class="bar dk"><i></i></div></div>
+  <div class="tb" data-v="89" data-max="100" data-u="%"><div class="t"><span>Quizzes B&amp;B · desempeño Biochem</span><b></b></div><div class="bar dk"><i></i></div></div>
+  <p class="note">Cell Biology y el resto de materias: 0%.</p>
 </section>
 
-<section id="s-plan">
-<div class="sh"><span class="no">05</span><h2>Calendario planificado</h2></div>
+<!-- UWORLD -->
+<section class="card w2" id="s-uw">
+  <h2>UWorld <i>QBank 1%</i></h2>
+  <div class="big"><div class="v">40<small>/3667</small></div><div class="l">QBank usadas</div><div class="d">3627 sin usar</div></div>
+  <div class="tb" data-v="40" data-max="3667" style="margin-top:10px"><div class="bar"><i></i></div></div>
+  <div class="kvs">
+    <div class="kv"><span>Ronda actual</span><b>0 · empieza mañana</b></div>
+    <div class="kv"><span>Test 31/10/2026</span><b>abandonado</b></div>
+    <div class="kv"><span>UWSA 1–3</span><b>sin activar</b></div>
+  </div>
+  <p class="note">El único test (31/10/2026, Tutored Untimed, 40 preguntas: 0 correctas, 1 incorrecta, 39 omitidas) quedó abandonado; no es un desempeño real. Los UWSA tienen 14 días de validez al activarlos.</p>
+</section>
+
+<!-- CUENTA REGRESIVA: const D -->
+<section class="card w2 cdgrid" id="s-cd">
+  <h2>Cuenta regresiva</h2>
+  <div class="cd big"><div class="v" id="cd-ex">—</div><div class="l">días · examen</div><div class="d">Máximo abril 2027</div></div>
+  <div class="cd big"><div class="v" id="cd-uw">—</div><div class="l">días · UWorld</div><div class="d">Vence 29/04/2027</div></div>
+</section>
+
+<!-- PRÓXIMOS HITOS: derivados de plan -->
+<section class="card w2" id="s-hitos">
+  <h2>Próximos hitos</h2>
+  <div id="hitos"></div>
+</section>
+
+<!-- ACCIONES -->
+<div class="card act"><p>Calendario<span>Plan día a día</span></p><a class="btn ac" href="#s-plan" data-open="s-plan">Ver plan</a></div>
+<div class="card act"><p>Materias<span>22 materias B&amp;B</span></p><a class="btn" href="#s-mat" data-open="s-mat">Ver todas</a></div>
+
+</div>
+
+<div class="sect-t lbl">Detalle</div>
+
+<details class="card" id="s-plan"><summary>Calendario planificado</summary><div class="body">
 <table><thead><tr><th>Fecha</th><th>Contenido</th><th>Estado</th></tr></thead><tbody id="plan"></tbody></table>
-</section>
+<p class="note">Las fechas futuras son planificadas y se reajustan cada domingo.</p>
+</div></details>
 
-<section id="s-bio">
-<div class="sh"><span class="no">06</span><h2>Biochemistry</h2></div>
-<div id="bioleds"></div>
+<details class="card" id="s-bio"><summary>Biochemistry <span class="lbl">10 / 28</span></summary><div class="body">
 <ul class="ck" id="bio"></ul>
-<p class="note">Checklist leído de tu cuenta B&amp;B el 17/11/2026 a las 20:00 (hora de Chicago): 10 de 28 lecciones completadas (36%). Gluconeogenesis: en curso hoy (declarado por ti; aún no figura como completada en la cuenta).</p>
-</section>
+<p class="note">10 de 28 lecciones completadas (36%). Gluconeogenesis: en curso hoy (declarado por ti; aún no figura como completada).</p>
+</div></details>
 
-<section id="s-mat">
-<div class="sh"><span class="no">07</span><h2>Progreso por materia</h2></div>
+<details class="card" id="s-mat"><summary>Progreso por materia <span class="lbl">2 / 22</span></summary><div class="body">
 <div class="seg" id="seg"></div>
 <table><thead><tr><th class="n">No.</th><th>Materia</th><th>Estado</th><th>Detalle</th></tr></thead><tbody id="mat"></tbody></table>
-</section>
+</div></details>
 
-<section id="s-con">
-<div class="sh"><span class="no">08</span><h2>Conexiones y fuentes de datos</h2></div>
+<!-- CONEXIONES: oculto en pantalla (hidden), se mantiene para los routines -->
+<section id="s-con" hidden>
 <table><tbody>
 <tr><td><b>Anki (MacBook Air)</b><br><small>AnkiConnect instalado; prueba de lectura correcta el 17/11 a las 7:52 PM.</small></td><td><span class="pill ok">Conectado</span></td></tr>
-<tr><td><b>UWorld</b><br><small>Conectado en modo lectura. Última lectura 17/11 a las 20:08. Actualización automática a las 6:00 y 18:00 (hora de Chicago).</small></td><td><span class="pill ok">Conectado (lectura)</span></td></tr>
-<tr><td><b>Boards &amp; Beyond</b><br><small>Conectado en modo lectura. Última lectura 17/11 a las 20:00. Actualización automática a las 6:00 y 18:00 (hora de Chicago).</small></td><td><span class="pill ok">Conectado (lectura)</span></td></tr>
+<tr><td><b>UWorld</b><br><small>Conectado en modo lectura. Última lectura 17/11 a las 20:08.</small></td><td><span class="pill ok">Conectado (lectura)</span></td></tr>
+<tr><td><b>Boards &amp; Beyond</b><br><small>Conectado en modo lectura. Última lectura 17/11 a las 20:00.</small></td><td><span class="pill ok">Conectado (lectura)</span></td></tr>
 <tr><td><b>Google Sheets (tracker)</b><br><small>Aún no conectado.</small></td><td><span class="pill wa">Sin conexión</span></td></tr>
-</tbody></table><p class="note">Nada se marca como completado sin un dato observado en tu cuenta o tu confirmación. Las fechas futuras son planificadas y se reajustan cada domingo.</p>
+</tbody></table>
 </section>
 
-<div class="foot"><span>step 1 · dashboard de estudio</span><span>chicago</span></div>
+<div class="foot">step 1 · dashboard de estudio</div>
 </div>
 <script>
 const plan=[
@@ -336,12 +412,43 @@ const F=[["all","Todas (22)"],["c","Completadas (2)"],["p","En progreso (1)"],["
 function mini(d){const p=parseInt(d,10)||0,on=Math.round(p/10);let s="";for(let i=0;i<10;i++)s+=`<i class="${i<on?'on':''}"></i>`;return `<span class="mini">${s}</span>&nbsp; `}
 function draw(){document.getElementById("seg").innerHTML=F.map(x=>`<button class="${x[0]==f?'on':''}" onclick="f='${x[0]}';draw()">${x[1]}</button>`).join("");document.getElementById("mat").innerHTML=M.map((m,i)=>[m,i]).filter(([m])=>f=="all"||m[1]==f).map(([m,i])=>`<tr><td class="n">${pad(i+1)}</td><td>${m[0]}</td><td>${lab[m[1]]}</td><td>${mini(m[2])}${m[2]}</td></tr>`).join("")}draw();
 
-/* barra del próximo día: data-blocks = bloques de 30 min */
-document.querySelectorAll("#daybar .seg-part").forEach(p=>{const n=+p.dataset.blocks;p.style.cssText=`flex:${n};display:flex;gap:3px`;p.innerHTML=Array.from({length:n},()=>`<div class="s" style="background:${p.dataset.c}"></div>`).join("")});
+/* fechas límite (cuenta regresiva en días, calculada) */
+const D={examen:"2027-04-30",uworld:"2027-04-29"};
 
 const H={"2026-10-31":44,"2026-11-02":73,"2026-11-03":87,"2026-11-04":4,"2026-11-05":229,"2026-11-07":226,"2026-11-10":205,"2026-11-11":310,"2026-11-12":346,"2026-11-13":303,"2026-11-14":552,"2026-11-15":239,"2026-11-16":430,"2026-11-17":635};
-(function(){const days=[];for(let d=new Date(2026,9,31);d<=new Date(2026,10,17);d.setDate(d.getDate()+1)){const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");days.push([k,H[k]||0,d.getDate()])}
-const mx=700,SEG=14,h=document.getElementById("hist"),x=document.getElementById("histx");
-h.innerHTML=days.map(d=>{const on=d[1]>0?Math.max(1,Math.round(d[1]/(mx/SEG))):0;let s="";for(let i=0;i<SEG;i++)s+=`<i class="${i<on?'on':''}"></i>`;return `<div class="col${d[1]>=500?' goal':''}" title="${d[0]}: ${d[1]}">${s}</div>`}).join("")+`<div class="goalline" style="bottom:${500/mx*100}%"><span>500</span></div>`;
+const key=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+
+/* histograma */
+(function(){const days=[];for(let d=new Date(2026,9,31);d<=new Date(2026,10,17);d.setDate(d.getDate()+1)){const k=key(d);days.push([k,H[k]||0,d.getDate()])}
+const mx=Math.max(700,...days.map(d=>d[1])),h=document.getElementById("hist"),x=document.getElementById("histx");
+h.innerHTML=days.map((d,i)=>`<div class="col${i==days.length-1?' last':d[1]>=500?' goal':''}" title="${d[0]}: ${d[1]}"><i style="height:${d[1]/mx*100}%"></i></div>`).join("")+`<div class="goalline" style="bottom:${500/mx*100}%"><span>500</span></div>`;
 x.innerHTML=days.map((d,i)=>`<div style="flex:1;text-align:center">${(i%3==0||i==days.length-1)?d[2]:""}</div>`).join("")})();
+
+/* semana lun–dom actual; número = respuestas Anki de H */
+(function(){const t=new Date();t.setHours(0,0,0,0);const m=new Date(t);m.setDate(t.getDate()-((t.getDay()+6)%7));const N=["L","M","M","J","V","S","D"];let s="";
+for(let i=0;i<7;i++){const d=new Date(m);d.setDate(m.getDate()+i);const c=d<t?"past":+d==+t?"today":"fut";const v=H[key(d)];
+s+=`<div class="d ${c}"><div class="lbl" style="font-size:9px">${N[i]}</div><div class="c">${d.getDate()}</div><div class="n">${c=="fut"?"":(v!=null?v:"—")}</div></div>`}
+document.getElementById("week").innerHTML=s})();
+
+/* anillo Anki */
+(function(){const r=document.getElementById("ring"),dn=+r.dataset.done,g=+r.dataset.goal,ok=!isNaN(dn)&&r.dataset.done!=="",p=ok?Math.min(1,dn/g):0,R=54,C=2*Math.PI*R;
+r.innerHTML=`<svg viewBox="0 0 128 128"><circle cx="64" cy="64" r="${R}" fill="none" stroke="#e8e8e5" stroke-width="11"/><circle cx="64" cy="64" r="${R}" fill="none" stroke="#1f4bff" stroke-width="11" stroke-linecap="round" stroke-dasharray="${C*p} ${C}"/></svg><div class="in"><b>${ok?dn:"—"}</b><span>/ ${g}</span></div>`;
+const b=document.getElementById("ringbadge");if(ok&&dn>=g){b.textContent="Meta cumplida"}else{b.textContent=ok?`Faltan ${g-dn}`:"Sin dato";b.classList.add("no")}})();
+
+/* barras finas */
+document.querySelectorAll(".tb").forEach(e=>{const v=+e.dataset.v,mx=+e.dataset.max,u=e.dataset.u||"",ok=e.dataset.v!==""&&!isNaN(v);e.querySelector(".bar i").style.width=ok?Math.min(100,v/mx*100)+"%":"0";const b=e.querySelector(".t b");if(b)b.textContent=ok?(u?v+u:v+" / "+mx):"—"});
+
+/* barra del próximo día: data-blocks = bloques de 30 min */
+document.querySelectorAll("#daybar .seg-part").forEach(p=>{const n=+p.dataset.blocks;p.style.cssText=`flex:${n};display:flex;gap:3px`;p.innerHTML=Array.from({length:n},()=>`<div class="s" style="background:${p.dataset.c}"></div>`).join("")});
+(function(){const rows=[...document.querySelectorAll("#s-next .row")],tot=rows.reduce((a,r)=>a+ +r.dataset.blocks,0);rows.forEach(r=>{r.querySelector(".dot").style.background=r.dataset.c;r.insertAdjacentHTML("beforeend",`<div class="bar"><i style="width:${r.dataset.blocks/tot*100}%;background:${r.dataset.c}"></i></div>`)})})();
+
+/* cuenta regresiva */
+(function(){const t=new Date();t.setHours(0,0,0,0);const dd=s=>{const [y,m,d]=s.split("-").map(Number);return Math.round((new Date(y,m-1,d)-t)/864e5)};
+document.getElementById("cd-ex").textContent=D.examen?dd(D.examen):"—";document.getElementById("cd-uw").textContent=D.uworld?dd(D.uworld):"—"})();
+
+/* próximos hitos: primeras 4 filas de plan no completadas */
+document.getElementById("hitos").innerHTML=plan.filter(r=>r[2]!==1).slice(0,4).map(r=>`<div class="hito"><span class="f">${r[0]}</span><span>${r[1]}</span></div>`).join("")||"—";
+
+/* botones: abren el <details> */
+document.querySelectorAll("[data-open]").forEach(a=>a.addEventListener("click",()=>{document.getElementById(a.dataset.open).open=true}));
 </script></body></html>
