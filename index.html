@@ -3,6 +3,7 @@
   DASHBOARD STEP 1 · MAPA DE DATOS (dónde vive cada valor)
   Rediseño "app home" con tarjetas: 17/11/2026. Respaldos: index_backup_2026-11-17.html (original),
   index_backup_pre_cards_2026-11-17.html (versión teenage engineering).
+  Estilo: capa "teenage engineering" al final del <style> (paneles con borde, numeración 00–10, marcadores ((n))).
   Regla: en pantalla NO se muestran notas de fuente/procedencia; solo el timestamp de #upd.
   Fuentes (solo para mantenimiento): Anki = AnkiConnect en el MacBook Air (última lectura 17/11 7:52 PM);
   B&B = cuenta Boards & Beyond, lectura 17/11 20:00; UWorld = cuenta UWorld STEP 1 QBank, lectura 17/11 20:08.
@@ -29,7 +30,7 @@
   Ids que usa el script: week, ring, hist, histx, plan, bio, bioleds, seg, mat, daybar, cd-ex, cd-uw, hitos.
 -->
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Dashboard Step 1</title><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Step 1"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#f2f2f0">
+<title>Dashboard Step 1</title><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Step 1"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#eeeeec">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -183,6 +184,55 @@ ul.ck li.todo{color:var(--tx2)}
 .note{font-size:11px;line-height:1.5;color:var(--tx2);margin:12px 0 0}
 .foot{margin:30px 4px 0;font-family:var(--mono);font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;text-align:center}
 
+/* ===== capa teenage engineering (17/11): paneles de hardware sobre el layout de tarjetas ===== */
+:root{--bg:#eeeeec;--card:#f6f6f4;--tx:#0d0d0d;--tx2:#6b6b6b;--tx3:#a3a3a0;--off:#d9d9d5;--line:#cfcfcb;--acs:#dfe5ff;
+  --sans:"Helvetica Neue",Helvetica,"Inter",Arial,sans-serif;--r:4px;--sh:none}
+.top{border-bottom:2px solid var(--tx);padding-bottom:14px;margin:6px 0 16px}
+.brand{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx2);display:flex;gap:14px}
+.brand i{font-style:normal;color:var(--ac)}
+h1{font-weight:500;margin-top:10px}
+#upd{background:transparent;box-shadow:none;border:1px solid var(--tx);border-radius:2px;padding:4px 8px}
+.card{border:1px solid var(--line);border-top:2px solid var(--tx)}
+.card h2{color:var(--tx);border-bottom:1px solid var(--tx);padding-bottom:8px}
+.card h2 .no,summary .no{font-style:normal;color:var(--ac);margin-right:10px;font-family:var(--mono);font-size:10px;font-weight:500}
+.k{font-family:var(--mono);font-size:10px;color:var(--tx3);letter-spacing:.06em;margin-bottom:6px}
+.big .v,#ring .in b{font-weight:400}
+.big .l{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;font-weight:500}
+.badge{border-radius:2px;background:transparent;border:1px solid var(--ac)}
+.badge.no{border-color:var(--tx3)}
+.kv{border-top-color:var(--line);font-family:var(--mono);font-size:11px}
+.bar,.bar i{border-radius:0}
+.bar{height:5px}
+#bioleds{height:14px;gap:3px;align-items:stretch}
+#bioleds i,#bioleds i.on,#bioleds i.half{height:auto;border-radius:0}
+#bioleds i.on{background:var(--ac)}
+#bioleds i.half{background:repeating-linear-gradient(90deg,var(--tx) 0 2px,transparent 2px 4px)}
+#daybar .s{border-radius:0}
+#hist .col i{border-radius:0}
+.row .dot{border-radius:0}
+.legend i{border-radius:0}
+.row b,.act p{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:500}
+.act p span{text-transform:none;letter-spacing:0;font-family:var(--sans)}
+.btn{border-radius:2px}
+.pill{background:transparent;padding:0;border-radius:0;color:var(--tx2)}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;border:1px solid var(--tx3);flex:none}
+.pill.ok{background:transparent;color:var(--tx)}.pill.ok::before{background:var(--ac);border-color:var(--ac)}
+.pill.wa{background:transparent;color:var(--tx)}.pill.wa::before{background:linear-gradient(90deg,var(--tx) 50%,transparent 50%);border-color:var(--tx)}
+.seg{gap:0;border:1px solid var(--tx);width:max-content;max-width:100%}
+.seg button{border-radius:0;background:transparent;border-right:1px solid var(--tx)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--ac)}
+.mini i{border-radius:0}
+details summary{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;font-weight:500}
+details summary::after{border-radius:0;background:transparent;border:1px solid var(--tx);color:var(--tx);width:22px;height:22px;font-size:13px}
+details[open] summary::after{background:var(--ac);border-color:var(--ac);color:#fff}
+details[open] summary{border-bottom:1px solid var(--tx);margin-bottom:12px}
+.sect-t{border-bottom:1px solid var(--tx);padding-bottom:6px;margin:26px 0 0}
+.foot{border-top:2px solid var(--tx);padding-top:10px;display:flex;justify-content:space-between;margin:30px 0 0}
+.hito .f{font-size:10px}
+details summary{justify-content:flex-start}
+details summary .lbl{margin-left:auto}
+
 @media(min-width:720px){
   .wrap{padding:32px 28px 80px}
   h1{font-size:42px}
@@ -199,7 +249,7 @@ ul.ck li.todo{color:var(--tx2)}
 </style></head><body><div class="wrap">
 
 <header class="top">
-  <div><div class="lbl">USMLE Step 1</div><h1>Inicio</h1></div>
+  <div><div class="brand"><span><i>●</i> step&nbsp;1</span><span>usmle</span><span>rev. 2026</span></div><h1>Inicio</h1></div>
   <span id="upd">Actualizado 17/11 20:10</span>
 </header>
 
@@ -209,7 +259,7 @@ ul.ck li.todo{color:var(--tx2)}
 
 <!-- ANKI HOY: anillo (data-done / data-goal) -->
 <section class="card ringwrap" id="s-anki">
-  <h2 style="align-self:stretch">Anki hoy <i>●</i></h2>
+  <h2 style="align-self:stretch"><span><em class="no">00</em>Anki hoy</span> <i>●</i></h2>
   <div id="ring" data-done="635" data-goal="500"></div>
   <span class="badge" id="ringbadge"></span>
   <div class="kvs">
@@ -222,7 +272,8 @@ ul.ck li.todo{color:var(--tx2)}
 
 <!-- RESUMEN: Biochem + materias -->
 <section class="card big" id="s-resumen">
-  <h2>Biochem <i>36%</i></h2>
+  <h2><span><em class="no">01</em>Biochem</span> <i>36%</i></h2>
+  <div class="k">((1))</div>
   <div class="v">10<small>/28</small></div>
   <div class="l">Temas Biochem</div>
   <div class="d">Gluconeogenesis en curso</div>
@@ -233,15 +284,16 @@ ul.ck li.todo{color:var(--tx2)}
 
 <!-- ANKI POR DÍA -->
 <section class="card w2" id="s-hist">
-  <h2>Anki por día <i>meta 500 · mín 250</i></h2>
+  <h2><span><em class="no">02</em>Anki por día</span> <i>meta 500 · mín 250</i></h2>
   <div id="hist"></div><div id="histx"></div>
   <div class="legend"><span><i style="background:var(--ac)"></i>Último día</span><span><i style="background:var(--tx)"></i>≥ 500</span><span><i style="background:#8a8a87"></i>250–499</span><span><i style="background:#c4c4c0"></i>&lt; 250</span><span>1 cuadrito = 50</span></div>
 </section>
 
 <!-- PRÓXIMO DÍA -->
 <section class="card w2" id="s-next">
+  <h2><span><em class="no">03</em>Mañana toca</span></h2>
   <div class="daytop">
-    <div><h2 style="margin-bottom:6px">Mañana toca</h2><div style="font-size:20px;font-weight:600;letter-spacing:-.02em">miércoles 18/11</div></div>
+    <div><div style="font-size:20px;font-weight:600;letter-spacing:-.02em">miércoles 18/11</div></div>
     <div class="num" style="font-size:13px;color:var(--tx2)">7 h 30 min</div>
   </div>
   <div id="daybar">
@@ -258,7 +310,7 @@ ul.ck li.todo{color:var(--tx2)}
 
 <!-- BOARDS & BEYOND: barras finas data-v / data-max -->
 <section class="card w2" id="s-bb">
-  <h2>Boards &amp; Beyond <i>Step 1 · 5%</i></h2>
+  <h2><span><em class="no">04</em>Boards &amp; Beyond</span> <i>Step 1 · 5%</i></h2>
   <div class="tb" data-v="5" data-max="100" data-u="%"><div class="t"><span>Step 1 Preclinical · 22 materias · 499 videos</span><b></b></div><div class="bar"><i></i></div></div>
   <div class="tb" data-v="10" data-max="28"><div class="t"><span>Biochemistry · lecciones</span><b></b></div><div class="bar"><i></i></div></div>
   <div class="tb" data-v="73" data-max="140"><div class="t"><span>Preguntas B&amp;B · Biochemistry</span><b></b></div><div class="bar dk"><i></i></div></div>
@@ -268,8 +320,8 @@ ul.ck li.todo{color:var(--tx2)}
 
 <!-- UWORLD -->
 <section class="card w2" id="s-uw">
-  <h2>UWorld <i>QBank 1%</i></h2>
-  <div class="big"><div class="v">40<small>/3667</small></div><div class="l">QBank usadas</div><div class="d">3627 sin usar</div></div>
+  <h2><span><em class="no">05</em>UWorld</span> <i>QBank 1%</i></h2>
+  <div class="big"><div class="k">((1))</div><div class="v">40<small>/3667</small></div><div class="l">QBank usadas</div><div class="d">3627 sin usar</div></div>
   <div class="tb" data-v="40" data-max="3667" style="margin-top:10px"><div class="bar"><i></i></div></div>
   <div class="kvs">
     <div class="kv"><span>Ronda actual</span><b>0 · empieza mañana</b></div>
@@ -281,14 +333,14 @@ ul.ck li.todo{color:var(--tx2)}
 
 <!-- CUENTA REGRESIVA: const D -->
 <section class="card w2 cdgrid" id="s-cd">
-  <h2>Cuenta regresiva</h2>
-  <div class="cd big"><div class="v" id="cd-ex">—</div><div class="l">días · examen</div><div class="d">Máximo abril 2027</div></div>
-  <div class="cd big"><div class="v" id="cd-uw">—</div><div class="l">días · UWorld</div><div class="d">Vence 29/04/2027</div></div>
+  <h2><span><em class="no">06</em>Cuenta regresiva</span></h2>
+  <div class="cd big"><div class="k">((1))</div><div class="v" id="cd-ex">—</div><div class="l">días · examen</div><div class="d">Máximo abril 2027</div></div>
+  <div class="cd big"><div class="k">((2))</div><div class="v" id="cd-uw">—</div><div class="l">días · UWorld</div><div class="d">Vence 29/04/2027</div></div>
 </section>
 
 <!-- PRÓXIMOS HITOS: derivados de plan -->
 <section class="card w2" id="s-hitos">
-  <h2>Próximos hitos</h2>
+  <h2><span><em class="no">07</em>Próximos hitos</span></h2>
   <div id="hitos"></div>
 </section>
 
@@ -298,19 +350,19 @@ ul.ck li.todo{color:var(--tx2)}
 
 </div>
 
-<div class="sect-t lbl">Detalle</div>
+<div class="sect-t lbl">Detalle ——</div>
 
-<details class="card" id="s-plan"><summary>Calendario planificado</summary><div class="body">
+<details class="card" id="s-plan"><summary><em class="no">08</em>Calendario planificado <span class="lbl"></span></summary><div class="body">
 <table><thead><tr><th>Fecha</th><th>Contenido</th><th>Estado</th></tr></thead><tbody id="plan"></tbody></table>
 <p class="note">Las fechas futuras son planificadas y se reajustan cada domingo.</p>
 </div></details>
 
-<details class="card" id="s-bio"><summary>Biochemistry <span class="lbl">10 / 28</span></summary><div class="body">
+<details class="card" id="s-bio"><summary><em class="no">09</em>Biochemistry <span class="lbl">10 / 28</span></summary><div class="body">
 <ul class="ck" id="bio"></ul>
 <p class="note">10 de 28 lecciones completadas (36%). Gluconeogenesis: en curso hoy (declarado por ti; aún no figura como completada).</p>
 </div></details>
 
-<details class="card" id="s-mat"><summary>Progreso por materia <span class="lbl">2 / 22</span></summary><div class="body">
+<details class="card" id="s-mat"><summary><em class="no">10</em>Progreso por materia <span class="lbl">2 / 22</span></summary><div class="body">
 <div class="seg" id="seg"></div>
 <table><thead><tr><th class="n">No.</th><th>Materia</th><th>Estado</th><th>Detalle</th></tr></thead><tbody id="mat"></tbody></table>
 </div></details>
@@ -325,7 +377,7 @@ ul.ck li.todo{color:var(--tx2)}
 </tbody></table>
 </section>
 
-<div class="foot">step 1 · dashboard de estudio</div>
+<div class="foot"><span>step 1 · dashboard de estudio</span><span>chicago</span></div>
 </div>
 <script>
 const plan=[
