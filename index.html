@@ -5,9 +5,9 @@
   index_backup_pre_cards_2026-11-17.html (versión teenage engineering).
   Estilo: capa "teenage engineering" al final del <style> (paneles con borde, numeración 00–10, marcadores ((n))).
   Regla: en pantalla NO se muestran notas de fuente/procedencia; solo el timestamp de #upd.
-  Fuentes (solo para mantenimiento): Anki = AnkiConnect en el MacBook Air (sin lectura 18/11 06:54: Mac desconectado);
-  B&B = cuenta Boards & Beyond, última lectura 17/11 23:12 (sesión vencida en sync 18/11 06:54, login requerido);
-  UWorld = cuenta UWorld STEP 1 QBank, última lectura 17/11 20:08 (sesión vencida en sync 18/11 06:54, login requerido).
+  Fuentes (solo para mantenimiento): Anki = AnkiConnect en el MacBook Air, última lectura 18/11 13:33;
+  B&B = cuenta Boards & Beyond, última lectura 18/11 13:33;
+  UWorld = cuenta UWorld STEP 1 QBank, última lectura 18/11 13:33.
 
   · Timestamp ....................... <span id="upd">Actualizado DD/MM HH:MM</span>
   · Semana (círculos lun–dom) ....... automática con la fecha del teléfono; número bajo cada día = H[fecha]
@@ -15,11 +15,11 @@
                                       filas .kv: distintas / nuevas / repasos / vencidas (valor en <b>)
   · Anki por día (cuadritos) ........ const H = {"YYYY-MM-DD": respuestas} en el <script>; 1 cuadrito = 50;
                                       líneas META 500 y MÍNIMO 250; colores: ≥500 / 250–499 / <250 / último día azul
-                                      (rango de días: bucle new Date(2026,9,31) .. new Date(2026,10,17))
+                                      (rango de días: bucle new Date(2026,9,31) .. new Date(2026,10,18))
   · Resumen (antes "00") ............ <section id="s-resumen">: tarjetas .big (.v valor, .l etiqueta, .d detalle)
   · Biochem (tarjeta) ............... valor 10/28 y % en #s-resumen; mini barras #bioleds salen de const bio
   · Boards & Beyond ................. <section id="s-bb">: barras finas .tb con data-v / data-max (y data-u = sufijo)
-  · UWorld .......................... <section id="s-uw">: barra .tb data-v="40" data-max="3667" + filas .kv + nota .note
+  · UWorld .......................... <section id="s-uw">: barra .tb data-v="40" data-max="3665" + filas .kv + nota .note
   · Cuenta regresiva ................ const D = {examen:"2027-04-30", uworld:"2027-04-29"} (días calculados en JS)
   · Próximo día ..................... <section id="s-next">: h2 con el día; barra segmentada #daybar (data-blocks =
                                       bloques de 30 min); filas .row con data-blocks (la barra fina sale de ahí)
@@ -319,7 +319,7 @@ details summary .lbl{margin-left:auto}
   <div><div class="brand"><span><i>●</i> step&nbsp;1</span><span>usmle</span><span>rev. 2026</span></div><h1>Inicio</h1></div>
   <div class="top-meta">
     <button type="button" id="refresh" aria-label="Refresh">↻ REFRESH</button>
-    <span id="upd">Actualizado 18/11 06:54</span>
+    <span id="upd">Actualizado 18/11 13:33</span>
   </div>
 </header>
 
@@ -330,13 +330,13 @@ details summary .lbl{margin-left:auto}
 <!-- ANKI HOY: anillo (data-done / data-goal) -->
 <section class="card ringwrap" id="s-anki">
   <h2 style="align-self:stretch"><span><em class="no">00</em>Anki hoy</span> <i>●</i></h2>
-  <div id="ring" data-done="" data-goal="500"></div>
+  <div id="ring" data-done="243" data-goal="500"></div>
   <span class="badge" id="ringbadge"></span>
   <div class="kvs">
-    <div class="kv"><span>Distintas</span><b>—</b></div>
-    <div class="kv"><span>Nuevas</span><b>—</b></div>
-    <div class="kv"><span>Repasos</span><b>—</b></div>
-    <div class="kv"><span>Vencidas</span><b>—</b></div>
+    <div class="kv"><span>Distintas</span><b>151</b></div>
+    <div class="kv"><span>Nuevas</span><b>50</b></div>
+    <div class="kv"><span>Repasos</span><b>101</b></div>
+    <div class="kv"><span>Vencidas</span><b>177</b></div>
   </div>
 </section>
 
@@ -380,8 +380,8 @@ details summary .lbl{margin-left:auto}
 
 <!-- BOARDS & BEYOND: barras finas data-v / data-max -->
 <section class="card w2" id="s-bb">
-  <h2><span><em class="no">04</em>Boards &amp; Beyond</span> <i>Step 1 · 5%</i></h2>
-  <div class="tb" data-v="5" data-max="100" data-u="%"><div class="t"><span>Step 1 Preclinical · 22 materias · 499 videos</span><b></b></div><div class="bar"><i></i></div></div>
+  <h2><span><em class="no">04</em>Boards &amp; Beyond</span> <i>Step 1 · 6%</i></h2>
+  <div class="tb" data-v="6" data-max="100" data-u="%"><div class="t"><span>Step 1 Preclinical · 22 materias · 499 videos</span><b></b></div><div class="bar"><i></i></div></div>
   <div class="tb" data-v="11" data-max="28"><div class="t"><span>Biochemistry · lecciones</span><b></b></div><div class="bar"><i></i></div></div>
   <div class="tb" data-v="78" data-max="140"><div class="t"><span>Preguntas B&amp;B · Biochemistry</span><b></b></div><div class="bar dk"><i></i></div></div>
   <div class="tb" data-v="90" data-max="100" data-u="%"><div class="t"><span>Quizzes B&amp;B · desempeño Biochem</span><b></b></div><div class="bar dk"><i></i></div></div>
@@ -393,8 +393,8 @@ details summary .lbl{margin-left:auto}
 <!-- UWORLD -->
 <section class="card w2" id="s-uw">
   <h2><span><em class="no">05</em>UWorld</span> <i>QBank 1%</i></h2>
-  <div class="big"><div class="k">((1))</div><div class="v">40<small>/3667</small></div><div class="l">QBank usadas</div><div class="d">3627 sin usar</div></div>
-  <div class="tb" data-v="40" data-max="3667" style="margin-top:10px"><div class="bar"><i></i></div></div>
+  <div class="big"><div class="k">((1))</div><div class="v">40<small>/3665</small></div><div class="l">QBank usadas</div><div class="d">3625 sin usar</div></div>
+  <div class="tb" data-v="40" data-max="3665" style="margin-top:10px"><div class="bar"><i></i></div></div>
   <div class="kvs">
     <div class="kv"><span>Ronda actual</span><b>0 · ronda desde 18/11</b></div>
     <div class="kv"><span>Test 31/10/2026</span><b>abandonado</b></div>
@@ -451,9 +451,9 @@ details summary .lbl{margin-left:auto}
 <!-- CONEXIONES: oculto en pantalla (hidden), se mantiene para los routines -->
 <section id="s-con" hidden>
 <table><tbody>
-<tr><td><b>Anki (MacBook Air)</b><br><small>Mac desconectado o apagado en el sync del 18/11 a las 06:54. Última lectura correcta: 17/11 a las 7:52 PM. No se pudo leer Anki de hoy.</small></td><td><span class="pill wa">Mac apagado</span></td></tr>
-<tr><td><b>UWorld</b><br><small>Sesión vencida en el sync del 18/11 a las 06:54 ("Your Session has expired"). Última lectura: 17/11 a las 20:08. Números en pantalla no se refrescaron.</small></td><td><span class="pill wa">Sesión vencida</span></td></tr>
-<tr><td><b>Boards &amp; Beyond</b><br><small>Sesión vencida en el sync del 18/11 a las 06:54 (redirigió a /login). Última lectura: 17/11 a las 23:12. Números en pantalla no se refrescaron.</small></td><td><span class="pill wa">Sesión vencida</span></td></tr>
+<tr><td><b>Anki (MacBook Air)</b><br><small>AnkiConnect instalado; última lectura 18/11 a las 13:33.</small></td><td><span class="pill ok">Conectado</span></td></tr>
+<tr><td><b>UWorld</b><br><small>Conectado en modo lectura. Última lectura 18/11 a las 13:33.</small></td><td><span class="pill ok">Conectado (lectura)</span></td></tr>
+<tr><td><b>Boards &amp; Beyond</b><br><small>Conectado en modo lectura. Última lectura 18/11 a las 13:33.</small></td><td><span class="pill ok">Conectado (lectura)</span></td></tr>
 <tr><td><b>Google Sheets (tracker)</b><br><small>Aún no conectado.</small></td><td><span class="pill wa">Sin conexión</span></td></tr>
 </tbody></table>
 </section>
@@ -555,11 +555,11 @@ function draw(){document.getElementById("seg").innerHTML=F.map(x=>`<button class
 /* fechas límite (cuenta regresiva en días, calculada) */
 const D={examen:"2027-04-30",uworld:"2027-04-29"};
 
-const H={"2026-10-31":44,"2026-11-02":73,"2026-11-03":87,"2026-11-04":4,"2026-11-05":229,"2026-11-07":226,"2026-11-10":205,"2026-11-11":310,"2026-11-12":346,"2026-11-13":303,"2026-11-14":552,"2026-11-15":239,"2026-11-16":430,"2026-11-17":635};
+const H={"2026-10-31":44,"2026-11-02":73,"2026-11-03":87,"2026-11-04":4,"2026-11-05":229,"2026-11-07":226,"2026-11-10":205,"2026-11-11":310,"2026-11-12":346,"2026-11-13":303,"2026-11-14":552,"2026-11-15":239,"2026-11-16":430,"2026-11-17":635,"2026-11-18":243};
 const key=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 
 /* histograma de cuadritos: 1 cuadrito = 50 respuestas; líneas META 500 y MÍNIMO 250 */
-(function(){const days=[];for(let d=new Date(2026,9,31);d<=new Date(2026,10,17);d.setDate(d.getDate()+1)){const k=key(d);days.push([k,H[k]||0,d.getDate()])}
+(function(){const days=[];for(let d=new Date(2026,9,31);d<=new Date(2026,10,18);d.setDate(d.getDate()+1)){const k=key(d);days.push([k,H[k]||0,d.getDate()])}
 const U=50,SEG=Math.max(14,Math.ceil(Math.max(...days.map(d=>d[1]))/U)),mx=SEG*U,h=document.getElementById("hist"),x=document.getElementById("histx");
 h.innerHTML=days.map((d,i)=>{const on=d[1]>0?Math.max(1,Math.round(d[1]/U)):0,c=i==days.length-1?"last":d[1]>=500?"goal":d[1]>=250?"mid":"lo";let q="";for(let j=0;j<SEG;j++)q+=`<i class="${j<on?'on':''}"></i>`;return `<div class="col ${c}" title="${d[0]}: ${d[1]}">${q}</div>`}).join("")
 +`<div class="ln g" style="bottom:${500/mx*100}%"><span>META 500</span></div><div class="ln m" style="bottom:${250/mx*100}%"><span>MÍNIMO 250</span></div>`;
@@ -594,7 +594,7 @@ document.getElementById("hitos").innerHTML=plan.filter(r=>r[2]!==1).slice(0,4).m
 
 /* 08 RENDIMIENTO · datos editables (solo valores ya observados; null = "—") */
 const PERF={
-  uw:{pct:null, usadas:40, total:3667, tests_ronda:0,
+  uw:{pct:null, usadas:40, total:3665, tests_ronda:0,
       nota:"Sin desempeño real aún: el único test (31/10) quedó abandonado. Ronda actual empieza 18/11.",
       sistemas:[], hist:[]},
   bb:{hechas:121, total:3701, alcance:"Total B&B", pct_quiz:83.9,
