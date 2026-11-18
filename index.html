@@ -203,6 +203,9 @@ ul.ck li.todo{color:var(--tx2)}
 .brand i{font-style:normal;color:var(--ac)}
 h1{font-weight:500;margin-top:10px}
 #upd{background:transparent;box-shadow:none;border:1px solid var(--tx);border-radius:2px;padding:4px 8px}
+.top-meta{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+#refresh{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--tx);background:transparent;border:1px solid var(--tx);border-radius:2px;padding:4px 8px;cursor:pointer;-webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
+#refresh:active{background:var(--ac);border-color:var(--ac);color:#fff}
 .card{border:1px solid var(--line);border-top:2px solid var(--tx)}
 .card h2{color:var(--tx);border-bottom:1px solid var(--tx);padding-bottom:8px}
 .card h2 .no,summary .no{font-style:normal;color:var(--ac);margin-right:10px;font-family:var(--mono);font-size:10px;font-weight:500}
@@ -314,7 +317,10 @@ details summary .lbl{margin-left:auto}
 
 <header class="top">
   <div><div class="brand"><span><i>●</i> step&nbsp;1</span><span>usmle</span><span>rev. 2026</span></div><h1>Inicio</h1></div>
-  <span id="upd">Actualizado 18/11 06:54</span>
+  <div class="top-meta">
+    <button type="button" id="refresh" aria-label="Refresh">↻ REFRESH</button>
+    <span id="upd">Actualizado 18/11 06:54</span>
+  </div>
 </header>
 
 <div id="week"></div>
@@ -670,4 +676,9 @@ document.addEventListener("keydown",e=>{if(e.key=="Escape")closeRep()});
 
 /* botones: abren el <details> */
 document.querySelectorAll("[data-open]").forEach(a=>a.addEventListener("click",()=>{document.getElementById(a.dataset.open).open=true}));
+document.getElementById("refresh").addEventListener("click",()=>{
+  const t="?t="+Date.now();
+  if(location.protocol==="file:") location.replace("https://edurrumas.github.io/step1-dashboard/"+t);
+  else location.href=location.origin+location.pathname+t;
+});
 </script></body></html>
