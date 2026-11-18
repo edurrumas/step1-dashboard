@@ -26,8 +26,17 @@
   · Calendario planificado .......... const plan = [[fecha, contenido, estado]]  (estado: 1 | "curso" | vacío) → <details id="s-plan">
   · Biochemistry checklist .......... const bio = [[lección, 1 | "curso" | 0, detalle]] → <details id="s-bio">
   · Progreso por materia ............ const M = [[materia, "c"|"p"|"n", detalle "NN% · ..."]] y filtros const F → <details id="s-mat">
+  · 08 Rendimiento ................. const PERF en el <script> → <section id="s-perf"> (paneles #perf-uw y #perf-bb)
+        PERF.uw = {pct, usadas, total, tests_ronda, nota, sistemas:[{n, pct}], hist:[{t:"etiqueta test", pct}]}
+        PERF.bb = {hechas, total, alcance, pct_quiz, nota, materias:[{n, hechas, de, pct}], hist:[{d:"mié", n}]}
+        null → "—"; listas vacías → "—" (no se dibuja nada inventado)
+  · Reportes diarios (tap en semana) const REPORTS = {"AAAA-MM-DD": {fecha, anki, bbq, bloques, base, manana}} en el <script>
+        (mismos campos que R de report_template.html). La rutina nocturna AGREGA una entrada por día.
+        Día pasado sin entrada → panel "Sin reporte" con H[día] (o "—"). Días futuros no se pueden tocar.
+        Copia PNG opcional en el sitio: reports/AAAA-MM-DD.png (el modal usa los datos embebidos, funciona offline).
+  · Detalle (09–11) ................. calendario, Biochemistry, materias (<details>)
   · Conexiones ...................... <section id="s-con" hidden> (no visible; estado con .pill ok / .pill wa)
-  Ids que usa el script: week, ring, hist, histx, plan, bio, bioleds, seg, mat, daybar, cd-ex, cd-uw, hitos.
+  Ids que usa el script: week, ring, hist, histx, plan, bio, bioleds, seg, mat, daybar, cd-ex, cd-uw, hitos, perf-uw, perf-bb, rpm, rpbody.
 -->
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Dashboard Step 1</title><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Step 1"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#eeeeec">
@@ -60,6 +69,7 @@ h1{font-size:34px;font-weight:600;letter-spacing:-.03em;margin:4px 0 0;line-heig
 #week .d .c{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:500;background:var(--off);color:var(--tx2)}
 #week .d.past .c{background:var(--tx);color:#fff}
 #week .d.today .c{background:var(--ac);color:#fff}
+#week .d[data-day]{cursor:pointer}#week .d[data-day]:active .c{outline:2px solid var(--ac);outline-offset:2px}
 #week .d .n{font-family:var(--mono);font-size:9px;color:var(--tx3)}
 #week .d.today .n{color:var(--ac)}
 
@@ -233,6 +243,59 @@ details[open] summary{border-bottom:1px solid var(--tx);margin-bottom:12px}
 details summary{justify-content:flex-start}
 details summary .lbl{margin-left:auto}
 
+/* 08 rendimiento */
+.pf-top{display:grid;grid-template-columns:repeat(3,1fr);margin-top:4px}
+.pf-top>div{padding:4px 10px 10px 0}.pf-top>div+div{padding-left:10px;border-left:1px solid var(--line)}
+.pf-top .v{font-size:26px;letter-spacing:-.03em;line-height:1.1;margin-top:4px;font-variant-numeric:tabular-nums}
+.pf-top .v small{font-size:12px;color:var(--tx3)}
+.pf-top .k{margin-bottom:2px}.pf-top .pl{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--tx2);margin-top:4px}
+.pf-sub{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx2);margin:14px 0 6px;padding-top:10px;border-top:1px solid var(--line)}
+.pf-h{display:flex;gap:4px;align-items:flex-end;height:60px}
+.pf-h div{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;max-width:34px}
+.pf-h .c{display:flex;flex-direction:column-reverse;gap:2px;width:100%}
+.pf-h .c i{height:4px;background:var(--off)}.pf-h .c i.on{background:var(--tx)}
+.pf-h div:last-child .c i.on{background:var(--ac)}
+.pf-h span{font-family:var(--mono);font-size:8px;color:var(--tx2)}
+.pf-empty{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+
+/* modal de reporte diario (tap en la semana) */
+#rpm{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;background:rgba(13,13,13,.45)}
+#rpm.on{display:flex}
+#rpm .sheet{width:100%;max-width:420px;max-height:92vh;overflow:auto;background:var(--bg);border-top:2px solid var(--tx);padding:14px 16px calc(18px + env(safe-area-inset-bottom));position:relative}
+@media(min-width:720px){#rpm{align-items:center}#rpm .sheet{border:1px solid var(--tx);border-top:2px solid var(--tx)}}
+#rpm .x{position:absolute;right:14px;top:12px;width:28px;height:28px;border:1px solid var(--tx);background:transparent;font-family:var(--mono);font-size:14px;cursor:pointer;color:var(--tx)}
+.q-top{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid var(--tx);padding:0 40px 10px 0}
+.q-top h3{font-size:26px;font-weight:500;letter-spacing:-.03em;margin:6px 0 0;line-height:1}
+.q-date{font-family:var(--mono);font-size:11px;border:1px solid var(--tx);padding:4px 8px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.q-c{background:var(--card);border:1px solid var(--line);border-top:2px solid var(--tx);border-radius:4px;padding:12px 14px;margin-top:12px}
+.q-h{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;border-bottom:1px solid var(--tx);padding-bottom:7px}
+.q-h em{font-style:normal;color:var(--ac);margin-right:8px}
+.q-st{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;font-weight:500;white-space:nowrap}
+.q-st::before{content:"";width:8px;height:8px;border-radius:50%;border:1px solid var(--tx3);flex:none}
+.q-st.ok{color:var(--ac)}.q-st.ok::before{background:var(--ac);border-color:var(--ac)}
+.q-st.medio::before{background:linear-gradient(90deg,var(--tx) 50%,transparent 50%);border-color:var(--tx)}
+.q-st.no::before{background:var(--tx);border-color:var(--tx)}.q-st.sd{color:var(--tx2)}
+.q-big{display:flex;align-items:baseline;gap:6px;margin-top:10px}
+.q-big b{font-size:32px;font-weight:400;letter-spacing:-.03em;line-height:1}
+.q-big span{font-family:var(--mono);font-size:11px;color:var(--tx2)}
+.q-leds{position:relative;display:flex;gap:3px;margin:12px 0 18px}
+.q-leds i{flex:1;height:14px;background:var(--off)}.q-leds i.on{background:var(--tx)}.q-leds i.on.ac{background:var(--ac)}
+.q-mk{position:absolute;top:-3px;bottom:-3px;border-left:1.5px solid var(--tx)}
+.q-mk span{position:absolute;top:100%;margin-top:3px;transform:translateX(-50%);font-family:var(--mono);font-size:8px;letter-spacing:.06em;white-space:nowrap}
+.q-mk.g{border-color:var(--ac)}.q-mk.g span{color:var(--ac)}.q-mk.m{border-left-style:dashed;border-color:var(--tx2)}.q-mk.m span{color:var(--tx2)}
+.q-kv{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);font-family:var(--mono);font-size:10px}
+.q-kv div{padding:7px 0 0}.q-kv div+div{padding-left:10px;border-left:1px solid var(--line)}
+.q-kv small{display:block;color:var(--tx2);font-size:8px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
+.q-sub{font-family:var(--mono);font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:var(--tx2);margin:8px 0 10px}
+.q-row{display:grid;grid-template-columns:30px 1fr auto;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+.q-row:last-child{border-bottom:0;padding-bottom:0}
+.q-row .n{font-family:var(--mono);font-size:9px;color:var(--ac)}
+.q-row b{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:500}
+.q-row small{display:block;font-family:var(--mono);font-size:10px;color:var(--tx2);margin-top:2px}
+.q-ln{display:grid;grid-template-columns:66px 1fr;gap:8px;padding:9px 0 0;font-size:12px;line-height:1.35}
+.q-ln+.q-ln{border-top:1px solid var(--line);margin-top:9px}
+.q-ln span:first-child{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx2);padding-top:2px}
+
 @media(min-width:720px){
   .wrap{padding:32px 28px 80px}
   h1{font-size:42px}
@@ -350,19 +413,28 @@ details summary .lbl{margin-left:auto}
 
 </div>
 
+<!-- 08 RENDIMIENTO: se arma desde const PERF en el <script> -->
+<section id="s-perf">
+<div class="sect-t lbl"><em class="no" style="font-style:normal;color:var(--ac);margin-right:10px">08</em>Rendimiento ——</div>
+<div class="grid" style="margin-top:12px">
+  <div class="card w2" id="perf-uw"></div>
+  <div class="card w2" id="perf-bb"></div>
+</div>
+</section>
+
 <div class="sect-t lbl">Detalle ——</div>
 
-<details class="card" id="s-plan"><summary><em class="no">08</em>Calendario planificado <span class="lbl"></span></summary><div class="body">
+<details class="card" id="s-plan"><summary><em class="no">09</em>Calendario planificado <span class="lbl"></span></summary><div class="body">
 <table><thead><tr><th>Fecha</th><th>Contenido</th><th>Estado</th></tr></thead><tbody id="plan"></tbody></table>
 <p class="note">Las fechas futuras son planificadas y se reajustan cada domingo.</p>
 </div></details>
 
-<details class="card" id="s-bio"><summary><em class="no">09</em>Biochemistry <span class="lbl">10 / 28</span></summary><div class="body">
+<details class="card" id="s-bio"><summary><em class="no">10</em>Biochemistry <span class="lbl">10 / 28</span></summary><div class="body">
 <ul class="ck" id="bio"></ul>
 <p class="note">10 de 28 lecciones completadas (36%). Gluconeogenesis: en curso hoy (declarado por ti; aún no figura como completada).</p>
 </div></details>
 
-<details class="card" id="s-mat"><summary><em class="no">10</em>Progreso por materia <span class="lbl">2 / 22</span></summary><div class="body">
+<details class="card" id="s-mat"><summary><em class="no">11</em>Progreso por materia <span class="lbl">2 / 22</span></summary><div class="body">
 <div class="seg" id="seg"></div>
 <table><thead><tr><th class="n">No.</th><th>Materia</th><th>Estado</th><th>Detalle</th></tr></thead><tbody id="mat"></tbody></table>
 </div></details>
@@ -376,6 +448,8 @@ details summary .lbl{margin-left:auto}
 <tr><td><b>Google Sheets (tracker)</b><br><small>Aún no conectado.</small></td><td><span class="pill wa">Sin conexión</span></td></tr>
 </tbody></table>
 </section>
+
+<div id="rpm" role="dialog" aria-modal="true"><div class="sheet"><button class="x" aria-label="Cerrar" onclick="closeRep()">×</button><div id="rpbody"></div></div></div>
 
 <div class="foot"><span>step 1 · dashboard de estudio</span><span>chicago</span></div>
 </div>
@@ -482,11 +556,13 @@ h.innerHTML=days.map((d,i)=>{const on=d[1]>0?Math.max(1,Math.round(d[1]/U)):0,c=
 +`<div class="ln g" style="bottom:${500/mx*100}%"><span>META 500</span></div><div class="ln m" style="bottom:${250/mx*100}%"><span>MÍNIMO 250</span></div>`;
 x.innerHTML=days.map((d,i)=>`<div style="flex:1;text-align:center">${(i%3==0||i==days.length-1)?d[2]:""}</div>`).join("")})();
 
+/* (ver REPORTS más abajo) */
 /* semana lun–dom actual; número = respuestas Anki de H */
 (function(){const t=new Date();t.setHours(0,0,0,0);const m=new Date(t);m.setDate(t.getDate()-((t.getDay()+6)%7));const N=["L","M","M","J","V","S","D"];let s="";
 for(let i=0;i<7;i++){const d=new Date(m);d.setDate(m.getDate()+i);const c=d<t?"past":+d==+t?"today":"fut";const v=H[key(d)];
-s+=`<div class="d ${c}"><div class="lbl" style="font-size:9px">${N[i]}</div><div class="c">${d.getDate()}</div><div class="n">${c=="fut"?"":(v!=null?v:"—")}</div></div>`}
-document.getElementById("week").innerHTML=s})();
+s+=`<div class="d ${c}"${c=="fut"?"":` data-day="${key(d)}" role="button" tabindex="0"`}><div class="lbl" style="font-size:9px">${N[i]}</div><div class="c">${d.getDate()}</div><div class="n">${c=="fut"?"":(v!=null?v:"—")}</div></div>`}
+document.getElementById("week").innerHTML=s;
+document.querySelectorAll("#week [data-day]").forEach(e=>{e.addEventListener("click",()=>openRep(e.dataset.day));e.addEventListener("keydown",k=>{if(k.key=="Enter")openRep(e.dataset.day)})})})();
 
 /* anillo Anki */
 (function(){const r=document.getElementById("ring"),dn=+r.dataset.done,g=+r.dataset.goal,ok=!isNaN(dn)&&r.dataset.done!=="",p=ok?Math.min(1,dn/g):0,R=54,C=2*Math.PI*R;
@@ -506,6 +582,78 @@ document.getElementById("cd-ex").textContent=D.examen?dd(D.examen):"—";documen
 
 /* próximos hitos: primeras 4 filas de plan no completadas */
 document.getElementById("hitos").innerHTML=plan.filter(r=>r[2]!==1).slice(0,4).map(r=>`<div class="hito"><span class="f">${r[0]}</span><span>${r[1]}</span></div>`).join("")||"—";
+
+/* 08 RENDIMIENTO · datos editables (solo valores ya observados; null = "—") */
+const PERF={
+  uw:{pct:null, usadas:40, total:3667, tests_ronda:0,
+      nota:"Sin desempeño real aún: el único test (31/10) quedó abandonado. Ronda actual empieza 18/11.",
+      sistemas:[], hist:[]},
+  bb:{hechas:73, total:140, alcance:"Biochem", pct_quiz:89,
+      nota:"Datos de Biochemistry. Cell Biology y el resto de materias: 0%.",
+      materias:[{n:"Biochemistry", hechas:73, de:140, pct:89}], hist:[]}
+};
+(function(){const V=x=>(x===null||x===undefined||x==="")?"—":x,P=x=>(x===null||x===undefined)?"—":x+"%";
+const leds=(arr,lab,val,mx)=>{if(!arr||!arr.length)return '<div class="pf-empty">—</div>';const S=10,m=mx||Math.max(1,...arr.map(val));return `<div class="pf-h">${arr.slice(-10).map(d=>{const on=val(d)?Math.max(1,Math.round(val(d)/m*S)):0;let c="";for(let i=0;i<S;i++)c+=`<i class="${i<on?'on':''}"></i>`;return `<div><div class="c">${c}</div><span>${V(lab(d))}</span></div>`}).join("")}</div>`};
+const bars=(arr,lab,val,max,txt)=>!arr||!arr.length?'<div class="pf-empty">—</div>':arr.map(x=>{const v=val(x),ok=v!==null&&v!==undefined;return `<div class="tb"><div class="t"><span>${lab(x)}</span><b>${txt(x)}</b></div><div class="bar"><i style="width:${ok?Math.min(100,v/max*100):0}%"></i></div></div>`}).join("");
+const u=PERF.uw,b=PERF.bb;
+document.getElementById("perf-uw").innerHTML=`<h2><span>UWorld performance</span><i>${u.total?Math.round(u.usadas/u.total*100)+"% usado":"—"}</i></h2>
+<div class="pf-top"><div><div class="k">((1))</div><div class="v">${P(u.pct)}</div><div class="pl">% correcto</div></div><div><div class="k">((2))</div><div class="v">${V(u.usadas)}<small>/${V(u.total)}</small></div><div class="pl">usadas</div></div><div><div class="k">((3))</div><div class="v">${V(u.tests_ronda)}</div><div class="pl">tests ronda</div></div></div>
+<div class="pf-sub">% por sistema</div>${bars(u.sistemas,x=>x.n,x=>x.pct,100,x=>P(x.pct))}
+<div class="pf-sub">% por test</div>${leds(u.hist,d=>d.t,d=>d.pct,100)}
+${u.nota?`<p class="note">${u.nota}</p>`:""}`;
+document.getElementById("perf-bb").innerHTML=`<h2><span>B&amp;B performance</span><i>${V(b.alcance)}</i></h2>
+<div class="pf-top"><div><div class="k">((1))</div><div class="v">${V(b.hechas)}<small>/${V(b.total)}</small></div><div class="pl">hechas</div></div><div><div class="k">((2))</div><div class="v">${P(b.pct_quiz)}</div><div class="pl">quiz %</div></div><div><div class="k">((3))</div><div class="v">${b.total&&b.hechas!=null?Math.round(b.hechas/b.total*100)+"%":"—"}</div><div class="pl">avance</div></div></div>
+<div class="pf-sub">Por materia</div>${bars(b.materias,x=>`${x.n} · ${V(x.hechas)}/${V(x.de)}`,x=>x.pct,100,x=>P(x.pct))}
+<div class="pf-sub">Preguntas por día</div>${leds(b.hist,d=>d.d,d=>d.n)}
+${b.nota?`<p class="note">${b.nota}</p>`:""}`})();
+
+/* REPORTES DIARIOS (tap en un día de la semana). Misma estructura que R de report_template.html.
+   La rutina nocturna agrega una entrada por día: REPORTS["AAAA-MM-DD"] = {fecha, anki, bbq, bloques, base, manana} */
+const REPORTS={
+  "2026-11-17":{
+    fecha:"mar 17/11",
+    anki:{hechas:635, meta:500, min:250, nuevas:175, repasos:169, vencidas:23, estado:"ok"},
+    bbq:{hoy:null, pct_hoy:null, total:73, total_de:140, total_label:"Total Biochem", pct_total:89, pct_label:"Quizzes Biochem", hist:null, estado:"sd"},
+    bloques:[
+      {n:"Videos B&B", valor:null, detalle:null, estado:"sd"},
+      {n:"UWorld",     valor:"0 hoy", detalle:"meta 10–15", estado:"no"}
+    ],
+    base:"Biochem 10/28 · plan: terminar Biochem 24/11",
+    manana:"Gluconeogenesis + HMP Shunt · 500 Anki · 10–15 UWorld"
+  }
+};
+function repHTML(R){
+ const L={ok:"Cumplió",medio:"A medias",no:"No cumplió",sd:"Sin dato"},v=x=>(x===null||x===undefined||x==="")?"—":x,
+  st=e=>`<span class="q-st ${L[e]?e:"sd"}">${L[e]||L.sd}</span>`,pc=x=>(x===null||x===undefined||x==="")?"—":x+"%";
+ const a=R.anki||{meta:500,min:250},U=50,SEG=Math.max(14,Math.ceil((a.hechas||0)/U)),on=a.hechas?Math.round(a.hechas/U):0;
+ let leds="";for(let i=0;i<SEG;i++)leds+=`<i class="${i<on?'on'+(a.hechas>=a.meta?' ac':''):''}"></i>`;
+ const pos=x=>{const k=x/U;return `calc(${k/SEG*100}% - ${k/SEG*(SEG-1)*3}px + ${k*3-1.5}px)`};
+ const q=R.bbq||{},tot=(q.total===null||q.total===undefined)?"—":q.total+(q.total_de?" / "+q.total_de:"");
+ return `<div class="q-top"><div><div class="brand"><span><i>●</i> step 1 · reporte</span></div><h3>Reporte del día</h3></div><div class="q-date">${v(R.fecha)}</div></div>
+ <div class="q-c"><div class="q-h"><span><em>01</em>Anki</span>${st(a.estado)}</div>
+  <div class="q-big"><b>${v(a.hechas)}</b><span>/ meta ${a.meta} · mín ${a.min}</span></div>
+  <div class="q-leds">${leds}<div class="q-mk m" style="left:${pos(a.min)}"><span>MÍN ${a.min}</span></div><div class="q-mk g" style="left:${pos(a.meta)}"><span>META ${a.meta}</span></div></div>
+  <div class="q-kv"><div><small>Nuevas</small>${v(a.nuevas)}</div><div><small>Repasos</small>${v(a.repasos)}</div><div><small>Vencidas</small>${v(a.vencidas)}</div></div></div>
+ <div class="q-c"><div class="q-h"><span><em>02</em>Preguntas B&amp;B</span>${st(q.estado)}</div>
+  <div class="q-big"><b${v(q.hoy)==="—"?' style="color:var(--tx3)"':""}>${v(q.hoy)}</b><span>hoy</span></div>
+  <div class="q-sub">No suman a UWorld</div>
+  <div class="q-kv"><div><small>% hoy</small>${pc(q.pct_hoy)}</div><div><small>${v(q.total_label)}</small>${tot}</div><div><small>${v(q.pct_label)}</small>${pc(q.pct_total)}</div></div></div>
+ <div class="q-c"><div class="q-h"><span><em>03</em>Bloques</span><span></span></div>
+  ${(R.bloques||[]).map((b,i)=>`<div class="q-row"><span class="n">((${i+1}))</span><div><b>${b.n}</b><small>${v(b.valor)}${b.detalle?" · "+b.detalle:""}</small></div>${st(b.estado)}</div>`).join("")}</div>
+ <div class="q-c"><div class="q-h"><span><em>04</em>Plan</span><span></span></div>
+  <div class="q-ln"><span>Horario base</span><span>${v(R.base)}</span></div>
+  <div class="q-ln"><span>Mañana</span><span>${v(R.manana)}</span></div></div>`;
+}
+function openRep(k){const D=["dom","lun","mar","mié","jue","vie","sáb"],[y,m,d]=k.split("-").map(Number),dt=new Date(y,m-1,d),f=`${D[dt.getDay()]} ${String(d).padStart(2,"0")}/${String(m).padStart(2,"0")}`;
+ const r=REPORTS[k];
+ document.getElementById("rpbody").innerHTML=r?repHTML(r):`<div class="q-top"><div><div class="brand"><span><i>●</i> step 1 · reporte</span></div><h3>Sin reporte</h3></div><div class="q-date">${f}</div></div>
+  <div class="q-c"><div class="q-h"><span><em>01</em>Anki</span><span class="q-st sd">Solo Anki</span></div>
+  <div class="q-big"><b>${H[k]!=null?H[k]:"—"}</b><span>respuestas · meta 500 · mín 250</span></div>
+  <p class="note">No hay reporte guardado para este día.</p></div>`;
+ document.getElementById("rpm").classList.add("on");document.body.style.overflow="hidden"}
+function closeRep(){document.getElementById("rpm").classList.remove("on");document.body.style.overflow=""}
+document.getElementById("rpm").addEventListener("click",e=>{if(e.target.id=="rpm")closeRep()});
+document.addEventListener("keydown",e=>{if(e.key=="Escape")closeRep()});
 
 /* botones: abren el <details> */
 document.querySelectorAll("[data-open]").forEach(a=>a.addEventListener("click",()=>{document.getElementById(a.dataset.open).open=true}));
