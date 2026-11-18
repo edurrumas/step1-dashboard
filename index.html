@@ -6,7 +6,7 @@
   Estilo: capa "teenage engineering" al final del <style> (paneles con borde, numeración 00–10, marcadores ((n))).
   Regla: en pantalla NO se muestran notas de fuente/procedencia; solo el timestamp de #upd.
   Fuentes (solo para mantenimiento): Anki = AnkiConnect en el MacBook Air (última lectura 17/11 7:52 PM);
-  B&B = cuenta Boards & Beyond, lectura 17/11 20:00; UWorld = cuenta UWorld STEP 1 QBank, lectura 17/11 20:08.
+  B&B = cuenta Boards & Beyond, lectura 17/11 23:12; UWorld = cuenta UWorld STEP 1 QBank, lectura 17/11 20:08.
 
   · Timestamp ....................... <span id="upd">Actualizado DD/MM HH:MM</span>
   · Semana (círculos lun–dom) ....... automática con la fecha del teléfono; número bajo cada día = H[fecha]
@@ -30,7 +30,7 @@
         PERF.uw = {pct, usadas, total, tests_ronda, nota, sistemas:[{n, pct}], hist:[{t:"etiqueta test", pct}]}
         PERF.bb = {hechas, total, alcance, pct_quiz, nota, materias:[{n, hechas, de, pct}], hist:[{d:"mié", n}]}
         null → "—"; listas vacías → "—" (no se dibuja nada inventado)
-  · Reportes diarios (tap en semana) const REPORTS = {"AAAA-MM-DD": {fecha, anki, bbq, bloques, base, manana}} en el <script>
+  · Reportes diarios (tap en semana) const REPORTS = {"AAAA-MM-DD": {fecha, anki, preg, bloques, base, manana}} en el <script>
         (mismos campos que R de report_template.html). La rutina nocturna AGREGA una entrada por día.
         Día pasado sin entrada → panel "Sin reporte" con H[día] (o "—"). Días futuros no se pueden tocar.
         Copia PNG opcional en el sitio: reports/AAAA-MM-DD.png (el modal usa los datos embebidos, funciona offline).
@@ -286,7 +286,7 @@ details summary .lbl{margin-left:auto}
 .q-kv{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);font-family:var(--mono);font-size:10px}
 .q-kv div{padding:7px 0 0}.q-kv div+div{padding-left:10px;border-left:1px solid var(--line)}
 .q-kv small{display:block;color:var(--tx2);font-size:8px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
-.q-sub{font-family:var(--mono);font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:var(--tx2);margin:8px 0 10px}
+.q-sub{line-height:1.6;font-family:var(--mono);font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:var(--tx2);margin:8px 0 10px}
 .q-row{display:grid;grid-template-columns:30px 1fr auto;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
 .q-row:last-child{border-bottom:0;padding-bottom:0}
 .q-row .n{font-family:var(--mono);font-size:9px;color:var(--ac)}
@@ -313,7 +313,7 @@ details summary .lbl{margin-left:auto}
 
 <header class="top">
   <div><div class="brand"><span><i>●</i> step&nbsp;1</span><span>usmle</span><span>rev. 2026</span></div><h1>Inicio</h1></div>
-  <span id="upd">Actualizado 17/11 20:10</span>
+  <span id="upd">Actualizado 17/11 23:15</span>
 </header>
 
 <div id="week"></div>
@@ -335,11 +335,11 @@ details summary .lbl{margin-left:auto}
 
 <!-- RESUMEN: Biochem + materias -->
 <section class="card big" id="s-resumen">
-  <h2><span><em class="no">01</em>Biochem</span> <i>36%</i></h2>
+  <h2><span><em class="no">01</em>Biochem</span> <i>39%</i></h2>
   <div class="k">((1))</div>
-  <div class="v">10<small>/28</small></div>
+  <div class="v">11<small>/28</small></div>
   <div class="l">Temas Biochem</div>
-  <div class="d">Gluconeogenesis en curso</div>
+  <div class="d">Sigue: HMP Shunt</div>
   <div id="bioleds"></div>
   <div class="kv" style="margin-top:12px"><span>Materias B&amp;B</span><b>2 / 22</b></div>
   <div class="d">Genetics, Basic Pharmacology</div>
@@ -366,7 +366,7 @@ details summary .lbl{margin-left:auto}
     <div class="seg-part" data-blocks="1" data-c="#c4c4c0"></div>
   </div>
   <div class="row" data-blocks="7" data-c="var(--ac)"><span class="dot"></span><div><b>Anki</b><small>Mínimo 500 tarjetas, separando nuevas y repasos</small></div><span class="t">3 h 30</span></div>
-  <div class="row" data-blocks="5" data-c="var(--tx)"><span class="dot"></span><div><b>Videos B&amp;B</b><small>Gluconeogenesis (si no la terminas esta noche) + HMP Shunt (14:19); Fatty Acids (26:36) si hay tiempo</small></div><span class="t">2 h 30</span></div>
+  <div class="row" data-blocks="5" data-c="var(--tx)"><span class="dot"></span><div><b>Videos B&amp;B</b><small>HMP Shunt (14:19) + Fatty Acids (26:36)</small></div><span class="t">2 h 30</span></div>
   <div class="row" data-blocks="2" data-c="#8a8a87"><span class="dot"></span><div><b>UWorld + revisión</b><small>10 a 15 preguntas no usadas, modo tutor (separadas de las de B&amp;B)</small></div><span class="t">1 h</span></div>
   <div class="row" data-blocks="1" data-c="#c4c4c0"><span class="dot"></span><div><b>Preguntas B&amp;B</b><small>De los temas del día, separadas de UWorld</small></div><span class="t">30 min</span></div>
 </section>
@@ -375,9 +375,11 @@ details summary .lbl{margin-left:auto}
 <section class="card w2" id="s-bb">
   <h2><span><em class="no">04</em>Boards &amp; Beyond</span> <i>Step 1 · 5%</i></h2>
   <div class="tb" data-v="5" data-max="100" data-u="%"><div class="t"><span>Step 1 Preclinical · 22 materias · 499 videos</span><b></b></div><div class="bar"><i></i></div></div>
-  <div class="tb" data-v="10" data-max="28"><div class="t"><span>Biochemistry · lecciones</span><b></b></div><div class="bar"><i></i></div></div>
-  <div class="tb" data-v="73" data-max="140"><div class="t"><span>Preguntas B&amp;B · Biochemistry</span><b></b></div><div class="bar dk"><i></i></div></div>
-  <div class="tb" data-v="89" data-max="100" data-u="%"><div class="t"><span>Quizzes B&amp;B · desempeño Biochem</span><b></b></div><div class="bar dk"><i></i></div></div>
+  <div class="tb" data-v="11" data-max="28"><div class="t"><span>Biochemistry · lecciones</span><b></b></div><div class="bar"><i></i></div></div>
+  <div class="tb" data-v="78" data-max="140"><div class="t"><span>Preguntas B&amp;B · Biochemistry</span><b></b></div><div class="bar dk"><i></i></div></div>
+  <div class="tb" data-v="90" data-max="100" data-u="%"><div class="t"><span>Quizzes B&amp;B · desempeño Biochem</span><b></b></div><div class="bar dk"><i></i></div></div>
+  <div class="tb" data-v="121" data-max="3701"><div class="t"><span>Preguntas B&amp;B · total</span><b></b></div><div class="bar dk"><i></i></div></div>
+  <div class="tb" data-v="83.9" data-max="100" data-u="%"><div class="t"><span>Quizzes B&amp;B · desempeño total</span><b></b></div><div class="bar dk"><i></i></div></div>
   <p class="note">Cell Biology y el resto de materias: 0%.</p>
 </section>
 
@@ -429,9 +431,9 @@ details summary .lbl{margin-left:auto}
 <p class="note">Las fechas futuras son planificadas y se reajustan cada domingo.</p>
 </div></details>
 
-<details class="card" id="s-bio"><summary><em class="no">10</em>Biochemistry <span class="lbl">10 / 28</span></summary><div class="body">
+<details class="card" id="s-bio"><summary><em class="no">10</em>Biochemistry <span class="lbl">11 / 28</span></summary><div class="body">
 <ul class="ck" id="bio"></ul>
-<p class="note">10 de 28 lecciones completadas (36%). Gluconeogenesis: en curso hoy (declarado por ti; aún no figura como completada).</p>
+<p class="note">11 de 28 lecciones completadas (39%). Siguiente: HMP Shunt.</p>
 </div></details>
 
 <details class="card" id="s-mat"><summary><em class="no">11</em>Progreso por materia <span class="lbl">2 / 22</span></summary><div class="body">
@@ -455,8 +457,8 @@ details summary .lbl{margin-left:auto}
 </div>
 <script>
 const plan=[
-  ["Mar 17/11","Glycogen Metabolism (completado en B&amp;B). Gluconeogenesis en curso hoy.","curso"],
-  ["Mié 18/11","HMP Shunt / (Gluconeogenesis si falta) / Fatty Acids"],
+  ["Mar 17/11","Glycogen Metabolism + Gluconeogenesis (completados en B&amp;B)",1],
+  ["Mié 18/11","HMP Shunt + Fatty Acids"],
   ["Jue 19/11","Fatty Acids, Ketone Bodies, Ethanol Metabolism"],
   ["Vie 20/11","Exercise & Starvation, Inborn Errors of Metabolism, Amino Acids"],
   ["Sáb 21/11","Examen UWorld 40 preguntas Timed + revisión, 500 Anki"],
@@ -485,7 +487,7 @@ const bio=[
   ["Pyruvate Dehydrogenase",1,"Completado"],
   ["TCA Cycle",1,"Completado"],
   ["Electron Transport Chain",1,"Completado"],
-  ["Gluconeogenesis","curso","en curso hoy"],
+  ["Gluconeogenesis",1,"Completado"],
   ["HMP Shunt",0,"18/11"],
   ["Fatty Acids",0,"18/11 si hay tiempo"],
   ["Ketone Bodies",0,"19/11"],
@@ -516,7 +518,7 @@ document.getElementById("bioleds").innerHTML=bio.map(b=>`<i class="${b[1]===1?'o
 const M=[
   ["Genetics","c","100% · 12 videos"],
   ["Basic Pharmacology","c","100% · 5 videos"],
-  ["Biochemistry","p","36% · 10/28 lecciones"],
+  ["Biochemistry","p","39% · 11/28 lecciones"],
   ["Cell Biology","n","0%"],
   ["Pathology (General)","n","0%"],
   ["Immunology","n","0%"],
@@ -588,9 +590,9 @@ const PERF={
   uw:{pct:null, usadas:40, total:3667, tests_ronda:0,
       nota:"Sin desempeño real aún: el único test (31/10) quedó abandonado. Ronda actual empieza 18/11.",
       sistemas:[], hist:[]},
-  bb:{hechas:73, total:140, alcance:"Biochem", pct_quiz:89,
-      nota:"Datos de Biochemistry. Cell Biology y el resto de materias: 0%.",
-      materias:[{n:"Biochemistry", hechas:73, de:140, pct:89}], hist:[]}
+  bb:{hechas:121, total:3701, alcance:"Total B&B", pct_quiz:83.9,
+      nota:"Biochemistry: 78/140 preguntas, quiz 90%. Cell Biology y el resto de materias: 0%.",
+      materias:[{n:"Biochemistry", hechas:78, de:140, pct:90}], hist:[]}
 };
 (function(){const V=x=>(x===null||x===undefined||x==="")?"—":x,P=x=>(x===null||x===undefined)?"—":x+"%";
 const leds=(arr,lab,val,mx)=>{if(!arr||!arr.length)return '<div class="pf-empty">—</div>';const S=10,m=mx||Math.max(1,...arr.map(val));return `<div class="pf-h">${arr.slice(-10).map(d=>{const on=val(d)?Math.max(1,Math.round(val(d)/m*S)):0;let c="";for(let i=0;i<S;i++)c+=`<i class="${i<on?'on':''}"></i>`;return `<div><div class="c">${c}</div><span>${V(lab(d))}</span></div>`}).join("")}</div>`};
@@ -608,36 +610,46 @@ document.getElementById("perf-bb").innerHTML=`<h2><span>B&amp;B performance</spa
 ${b.nota?`<p class="note">${b.nota}</p>`:""}`})();
 
 /* REPORTES DIARIOS (tap en un día de la semana). Misma estructura que R de report_template.html.
-   La rutina nocturna agrega una entrada por día: REPORTS["AAAA-MM-DD"] = {fecha, anki, bbq, bloques, base, manana} */
+   La rutina nocturna agrega una entrada por día: REPORTS["AAAA-MM-DD"] = {fecha, anki, preg, bloques, base, manana}
+   preg = {hoy, pct_hoy, total, pct_total, bb:{hoy,pct_hoy,total,pct_total}, uw:{...}, hist, estado}; combinados null → se calculan de bb + uw; hoy_min:true → muestra "≥" */
 const REPORTS={
   "2026-11-17":{
     fecha:"mar 17/11",
     anki:{hechas:635, meta:500, min:250, nuevas:175, repasos:169, vencidas:23, estado:"ok"},
-    bbq:{hoy:null, pct_hoy:null, total:73, total_de:140, total_label:"Total Biochem", pct_total:89, pct_label:"Quizzes Biochem", hist:null, estado:"sd"},
+    preg:{hoy:null, pct_hoy:null, total:null, pct_total:null,
+          bb:{hoy:5, hoy_min:true, pct_hoy:null, total:121, pct_total:83.9},
+          uw:{hoy:0, pct_hoy:null, total:null, pct_total:null},
+          hist:null, estado:"medio"},
     bloques:[
-      {n:"Videos B&B", valor:null, detalle:null, estado:"sd"},
+      {n:"Videos B&B", valor:"Glycogen + Gluconeogenesis", detalle:null, estado:"ok"},
       {n:"UWorld",     valor:"0 hoy", detalle:"meta 10–15", estado:"no"}
     ],
-    base:"Biochem 10/28 · plan: terminar Biochem 24/11",
-    manana:"Gluconeogenesis + HMP Shunt · 500 Anki · 10–15 UWorld"
+    base:"Biochem 11/28 · plan: terminar Biochem 24/11",
+    manana:"HMP Shunt + Fatty Acids · 500 Anki · 10–15 UWorld"
   }
 };
+function pregCalc(p){p=p||{};const P=[p.bb||{},p.uw||{}],num=x=>typeof x==="number"&&!isNaN(x);
+ const sum=k=>P.every(o=>num(o[k]))?P.reduce((a,o)=>a+o[k],0):null;
+ const wp=(k,pk)=>{if(!P.every(o=>num(o[k])))return null;const t=P.reduce((a,o)=>a+o[k],0);if(!t)return null;
+   if(!P.every(o=>o[k]===0||num(o[pk])))return null;return Math.round(P.reduce((a,o)=>a+(o[k]?o[k]*o[pk]:0),0)/t)};
+ const pick=(x,y)=>num(x)?x:y;
+ return {hm:!!(p.hoy_min||P.some(o=>o.hoy_min)),hoy:pick(p.hoy,sum("hoy")),pct_hoy:pick(p.pct_hoy,wp("hoy","pct_hoy")),total:pick(p.total,sum("total")),pct_total:pick(p.pct_total,wp("total","pct_total")),bb:P[0],uw:P[1]}}
 function repHTML(R){
  const L={ok:"Cumplió",medio:"A medias",no:"No cumplió",sd:"Sin dato"},v=x=>(x===null||x===undefined||x==="")?"—":x,
   st=e=>`<span class="q-st ${L[e]?e:"sd"}">${L[e]||L.sd}</span>`,pc=x=>(x===null||x===undefined||x==="")?"—":x+"%";
  const a=R.anki||{meta:500,min:250},U=50,SEG=Math.max(14,Math.ceil((a.hechas||0)/U)),on=a.hechas?Math.round(a.hechas/U):0;
  let leds="";for(let i=0;i<SEG;i++)leds+=`<i class="${i<on?'on'+(a.hechas>=a.meta?' ac':''):''}"></i>`;
  const pos=x=>{const k=x/U;return `calc(${k/SEG*100}% - ${k/SEG*(SEG-1)*3}px + ${k*3-1.5}px)`};
- const q=R.bbq||{},tot=(q.total===null||q.total===undefined)?"—":q.total+(q.total_de?" / "+q.total_de:"");
+ const q=R.preg||{},c=pregCalc(q);
  return `<div class="q-top"><div><div class="brand"><span><i>●</i> step 1 · reporte</span></div><h3>Reporte del día</h3></div><div class="q-date">${v(R.fecha)}</div></div>
  <div class="q-c"><div class="q-h"><span><em>01</em>Anki</span>${st(a.estado)}</div>
   <div class="q-big"><b>${v(a.hechas)}</b><span>/ meta ${a.meta} · mín ${a.min}</span></div>
   <div class="q-leds">${leds}<div class="q-mk m" style="left:${pos(a.min)}"><span>MÍN ${a.min}</span></div><div class="q-mk g" style="left:${pos(a.meta)}"><span>META ${a.meta}</span></div></div>
   <div class="q-kv"><div><small>Nuevas</small>${v(a.nuevas)}</div><div><small>Repasos</small>${v(a.repasos)}</div><div><small>Vencidas</small>${v(a.vencidas)}</div></div></div>
- <div class="q-c"><div class="q-h"><span><em>02</em>Preguntas B&amp;B</span>${st(q.estado)}</div>
-  <div class="q-big"><b${v(q.hoy)==="—"?' style="color:var(--tx3)"':""}>${v(q.hoy)}</b><span>hoy</span></div>
-  <div class="q-sub">No suman a UWorld</div>
-  <div class="q-kv"><div><small>% hoy</small>${pc(q.pct_hoy)}</div><div><small>${v(q.total_label)}</small>${tot}</div><div><small>${v(q.pct_label)}</small>${pc(q.pct_total)}</div></div></div>
+ <div class="q-c"><div class="q-h"><span><em>02</em>Preguntas</span>${st(q.estado)}</div>
+  <div class="q-big"><b${v(c.hoy)==="—"?' style="color:var(--tx3)"':""}>${c.hm&&c.hoy!=null?"≥":""}${v(c.hoy)}</b><span>hoy</span></div>
+  <div class="q-sub">Hoy: B&amp;B ${c.bb.hoy_min&&c.bb.hoy!=null?"≥":""}${v(c.bb.hoy)} · UWorld ${c.uw.hoy_min&&c.uw.hoy!=null?"≥":""}${v(c.uw.hoy)}<br>Total: B&amp;B ${v(c.bb.total)} · UWorld ${v(c.uw.total)}</div>
+  <div class="q-kv"><div><small>% hoy</small>${pc(c.pct_hoy)}</div><div><small>Total</small>${v(c.total)}</div><div><small>% total</small>${pc(c.pct_total)}</div></div></div>
  <div class="q-c"><div class="q-h"><span><em>03</em>Bloques</span><span></span></div>
   ${(R.bloques||[]).map((b,i)=>`<div class="q-row"><span class="n">((${i+1}))</span><div><b>${b.n}</b><small>${v(b.valor)}${b.detalle?" · "+b.detalle:""}</small></div>${st(b.estado)}</div>`).join("")}</div>
  <div class="q-c"><div class="q-h"><span><em>04</em>Plan</span><span></span></div>
