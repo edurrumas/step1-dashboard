@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<!--
+  DASHBOARD STEP 1 · MAPA DE DATOS (dónde vive cada valor)
+  Rediseño visual 17/11/2026 (estilo teenage engineering). Contenido idéntico al original.
+  Respaldo del original: index_backup_2026-11-17.html
+
+  · Última actualización ............ <p id="upd">
+  · 00 Resumen (4 métricas) ......... <section id="s-resumen">, cada valor en .v / .l / .d
+  · 01 Anki (respuestas, nuevas...) . <section id="s-anki">, filas .blk (valor a la derecha)
+  · 01 Anki histograma .............. const H = {"YYYY-MM-DD": respuestas} en el <script>
+                                      (rango de días: bucle new Date(2026,9,31) .. new Date(2026,10,17))
+  · 02 Boards & Beyond .............. <section id="s-bb">, métricas .m + nota .note
+  · 03 UWorld ....................... <section id="s-uw">, título h2 lleva la hora de lectura
+  · 04 Próximo día .................. <section id="s-next">; barra segmentada: atributo data-blocks
+                                      (bloques de 30 min) en cada .seg-part; filas .blk
+  · 05 Calendario planificado ....... const plan = [[fecha, contenido, estado]]  (estado: 1 | "curso" | vacío)
+  · 06 Biochemistry checklist ....... const bio = [[lección, 1 | "curso" | 0, detalle]]
+  · 07 Progreso por materia ......... const M = [[materia, "c"|"p"|"n", detalle "NN% · ..."]]
+                                      y filtros const F (contadores entre paréntesis)
+  · 08 Conexiones ................... <section id="s-con">, tabla; estado con .pill ok / .pill wa
+  Ids que usa el script: hist, histx, plan, bio, bioleds, seg, mat.
+-->
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard Step 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eeeeec;--paper:#f6f6f4;--tx:#0d0d0d;--tx2:#6b6b6b;--tx3:#a3a3a0;
+  --rule:#0d0d0d;--hair:#cfcfcb;--ac:#1f4bff;--off:#d9d9d5;--wa:#0d0d0d;
+  --mono:"IBM Plex Mono","SF Mono",ui-monospace,Menlo,Consolas,"DejaVu Sans Mono",monospace;
+  --sans:"Helvetica Neue",Helvetica,"Inter",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;font-family:var(--sans);color:var(--tx);background:var(--bg);-webkit-font-smoothing:antialiased}
+b{font-weight:500}
+small{font-size:inherit}
+.wrap{max-width:1240px;margin:0 auto;padding:0 32px 80px}
+
+/* top bar */
+.top{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px;padding:28px 0 18px;border-bottom:2px solid var(--rule)}
+.brand{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx2);display:flex;gap:18px;flex-wrap:wrap}
+.brand i{font-style:normal;color:var(--ac)}
+h1{font-family:var(--sans);font-weight:500;font-size:44px;letter-spacing:-.03em;line-height:1;margin:14px 0 0;}
+h1 span{color:var(--ac)}
+.meta{font-family:var(--mono);font-size:11px;line-height:1.7;text-align:right;color:var(--tx2);}
+.meta p{margin:0}
+#upd{color:var(--tx)}
+
+/* sections */
+section{margin-top:44px}
+.sh{display:grid;grid-template-columns:56px 1fr;align-items:baseline;border-bottom:1px solid var(--rule);padding-bottom:8px;margin-bottom:0}
+.sh .no{font-family:var(--mono);font-size:11px;color:var(--ac)}
+h2{font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin:0}
+
+/* grids with hairline cells, no cards */
+.grid{display:grid;border-left:1px solid var(--hair)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.cell{border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:18px 18px 20px;min-width:0}
+.m .k{font-family:var(--mono);font-size:10px;color:var(--tx3);letter-spacing:.06em}
+.m .v{font-family:var(--sans);font-size:40px;font-weight:400;letter-spacing:-.03em;line-height:1;margin:22px 0 14px;font-variant-numeric:tabular-nums}
+.m .l{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:500}
+.m .d{font-family:var(--mono);font-size:11px;color:var(--tx2);margin-top:6px;line-height:1.5;}
+.cap{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--tx2);margin:0 0 10px;font-weight:500}
+
+/* spec rows */
+.blk{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--hair);font-family:var(--mono);font-size:12px}
+.blk:last-of-type{border-bottom:0}
+.blk b{text-transform:uppercase;letter-spacing:.05em;font-size:11px}
+.blk small{display:block;color:var(--tx2);margin-top:3px;font-size:11px}
+.blk>div:last-child{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.blk>div:last-child b{font-size:18px;font-family:var(--sans);letter-spacing:-.02em}
+
+.note{font-family:var(--mono);font-size:11px;line-height:1.6;color:var(--tx2);margin:14px 0 0;max-width:900px}
+.note::before{content:"※ ";color:var(--ac)}
+
+/* tags / leds */
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;color:var(--tx2)}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;border:1px solid var(--tx3);background:transparent;flex:none}
+.pill.ok{color:var(--tx)}.pill.ok::before{background:var(--ac);border-color:var(--ac)}
+.pill.wa{color:var(--tx)}.pill.wa::before{background:linear-gradient(90deg,var(--tx) 50%,transparent 50%);border-color:var(--tx)}
+.led{display:inline-block;width:8px;height:8px;border-radius:50%;border:1px solid var(--tx3);margin-right:10px;vertical-align:0;flex:none}
+.led.on{background:var(--ac);border-color:var(--ac)}
+.led.half{background:linear-gradient(90deg,var(--tx) 50%,transparent 50%);border-color:var(--tx)}
+.sq{display:inline-block;width:10px;height:10px;margin-right:10px;vertical-align:-1px}
+
+/* segmented bars */
+.segbar{display:flex;gap:3px;margin:4px 0 18px}
+.segbar .s{flex:1;height:26px;background:var(--off)}
+.mini{display:inline-flex;gap:2px;vertical-align:middle}
+.mini i{width:6px;height:10px;background:var(--off)}
+.mini i.on{background:var(--ac)}
+
+/* histogram */
+#hist{display:flex;align-items:flex-end;gap:4px;height:196px;margin-top:6px;position:relative}
+#hist .col{flex:1;display:flex;flex-direction:column-reverse;gap:2px;height:100%}
+#hist .col i{flex:1;background:var(--off)}
+#hist .col i.on{background:var(--tx)}
+#hist .col.goal i.on{background:var(--ac)}
+#hist .goalline{position:absolute;left:-6px;right:-6px;border-top:1px dashed var(--tx);pointer-events:none}
+#hist .goalline span{position:absolute;right:0;top:-15px;font-family:var(--mono);font-size:9px;background:var(--paper);padding:0 4px}
+#histx{display:flex;gap:4px;font-family:var(--mono);font-size:10px;color:var(--tx2);margin-top:6px}
+.legend{display:flex;gap:16px;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--tx2);margin-top:12px}
+.legend span{display:inline-flex;align-items:center;gap:6px}.legend i{width:8px;height:8px;display:inline-block}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px}
+th{font-weight:500;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3);text-align:left;padding:12px 10px 8px 0;border-bottom:1px solid var(--rule)}
+td{padding:11px 10px 11px 0;border-bottom:1px solid var(--hair);vertical-align:top;text-align:left}
+td:first-child{white-space:nowrap}
+td small{color:var(--tx2);font-size:11px;line-height:1.5}
+td b{text-transform:uppercase;letter-spacing:.05em;font-size:11px}
+#plan tr td:first-child{color:var(--ac);}
+.n{color:var(--tx3);width:36px}
+
+/* filters */
+.seg{display:flex;flex-wrap:wrap;gap:0;margin:16px 0 6px;border:1px solid var(--rule);width:max-content;max-width:100%}
+.seg button{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;border:0;border-right:1px solid var(--rule);background:transparent;color:var(--tx);padding:8px 14px;cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--ac);color:#fff}
+.seg button:hover:not(.on){background:var(--off)}
+
+/* biochem checklist */
+ul.ck{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,1fr);grid-auto-flow:column;grid-template-rows:repeat(14,auto);column-gap:32px;font-family:var(--mono);font-size:12px}
+ul.ck li{display:grid;grid-template-columns:28px 18px 1fr auto;align-items:center;padding:8px 0;border-bottom:1px solid var(--hair)}
+ul.ck li .i{color:var(--tx3);font-size:10px}
+ul.ck li span{color:var(--tx2);font-size:10px;text-transform:uppercase;letter-spacing:.05em}
+ul.ck li.done{color:var(--tx)}ul.ck li.todo{color:var(--tx2)}
+#bioleds{display:flex;gap:3px;margin:16px 0 4px}
+#bioleds i{flex:1;height:14px;background:var(--off)}
+#bioleds i.on{background:var(--ac)}#bioleds i.half{background:repeating-linear-gradient(90deg,var(--tx) 0 2px,transparent 2px 4px)}
+
+.panel{background:var(--paper);padding:20px 22px 22px;border:1px solid var(--hair);border-top:0}
+.foot{margin-top:60px;border-top:2px solid var(--rule);padding-top:10px;display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em}
+
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g2{grid-template-columns:1fr}ul.ck{grid-template-columns:1fr;grid-auto-flow:row;grid-template-rows:none}h1{font-size:34px}}
+@media(max-width:560px){.wrap{padding:0 16px 60px}.g4{grid-template-columns:1fr}.top{grid-template-columns:1fr}.meta{text-align:left}.m .v{font-size:34px}.sh{grid-template-columns:40px 1fr}td:first-child{white-space:normal}}
+</style></head><body><div class="wrap">
+
+<header class="top">
+  <div>
+    <div class="brand"><span><i>●</i> step&nbsp;1</span><span>usmle</span><span>rev. 2026</span></div>
+    <h1>USMLE Step 1 · <span>Dashboard de estudio</span></h1>
+  </div>
+  <div class="meta">
+    <p class="sub">Anki: dato leído de tu Mac. B&amp;B y UWorld: leídos de tu cuenta.</p>
+    <p class="upd" id="upd">Última actualización: 17/11/2026 20:10 (hora de Chicago)</p>
+  </div>
+</header>
+
+<section id="s-resumen">
+<div class="sh"><span class="no">00</span><h2>Resumen</h2></div>
+<div class="grid g4">
+<div class="cell m"><div class="k">((1))</div><div class="v">2 / 22</div><div class="l">Materias B&amp;B completadas</div><div class="d">Genetics, Basic Pharmacology · Step 1: 5%</div></div>
+<div class="cell m"><div class="k">((2))</div><div class="v">10 / 28</div><div class="l">Temas Biochem</div><div class="d">36% · leído de tu cuenta B&amp;B · 17/11 20:00</div></div>
+<div class="cell m"><div class="k">((3))</div><div class="v">0</div><div class="l">Preguntas UWorld</div><div class="d">Ronda actual · empieza 18/11 · el test del 31/10 quedó abandonado</div></div>
+<div class="cell m"><div class="k">((4))</div><div class="v" style="color:var(--ac)">635</div><div class="l">Anki hoy</div><div class="d">Meta 500 cumplida · leído 7:52 PM</div></div>
+</div>
+</section>
+
+<section id="s-anki">
+<div class="sh"><span class="no">01</span><h2>Anki · leído de tu Mac</h2></div>
+<div class="grid g2">
+<div class="cell">
+<div class="blk"><div><b>Respuestas hoy</b><small>Meta mínima 500</small></div><div><b>635</b> &nbsp;<span class="pill ok">Cumplida</span></div></div>
+<div class="blk"><div><b>Tarjetas distintas hoy</b><small>Nuevas y repasos</small></div><div>344</div></div>
+<div class="blk"><div><b>Nuevas hoy</b><small>Sin cuota fija</small></div><div>175</div></div>
+<div class="blk"><div><b>Repasos hoy</b><small>Tarjetas distintas menos nuevas</small></div><div>169</div></div>
+<div class="blk"><div><b>Vencidas pendientes</b><small>A las 7:52 PM</small></div><div>23</div></div>
+<p class="note">Fuente: AnkiConnect en tu MacBook Air, última lectura 17/11/2026 7:52 PM (hora de Chicago). Solo se actualiza con tu Mac encendida y Anki abierto.</p></div>
+<div class="cell"><p class="cap">Respuestas por día</p><div id="hist"></div><div id="histx"></div>
+<div class="legend"><span><i style="background:var(--ac)"></i>≥ 500</span><span><i style="background:var(--tx)"></i>&lt; 500</span><span>1 segmento = 50</span></div>
+<p class="note">La línea punteada marca la meta de 500. Días sin barra: 0 respuestas.</p></div>
+</div>
+</section>
+
+<section id="s-bb">
+<div class="sh"><span class="no">02</span><h2>Boards &amp; Beyond · leído de tu cuenta</h2></div>
+<div class="grid g4">
+<div class="cell m"><div class="k">((1))</div><div class="v">5%</div><div class="l">Step 1 Preclinical</div><div class="d">22 materias · 499 videos</div></div>
+<div class="cell m"><div class="k">((2))</div><div class="v">36%</div><div class="l">Biochemistry</div><div class="d">10 / 28 lecciones completadas</div></div>
+<div class="cell m"><div class="k">((3))</div><div class="v">73 / 140</div><div class="l">Preguntas B&amp;B</div><div class="d">Respondidas en Biochemistry</div></div>
+<div class="cell m"><div class="k">((4))</div><div class="v">89%</div><div class="l">Quizzes B&amp;B</div><div class="d">Desempeño en Biochemistry</div></div>
+</div>
+<p class="note">leído de tu cuenta B&amp;B · 17/11 20:00 (hora de Chicago). Cell Biology y el resto de materias: 0%.</p>
+</section>
+
+<section id="s-uw">
+<div class="sh"><span class="no">03</span><h2>UWorld · leído de tu cuenta · 17/11 20:08</h2></div>
+<div class="grid g4">
+<div class="cell m"><div class="k">((1))</div><div class="v">40 / 3667</div><div class="l">QBank usadas</div><div class="d">1% · 3627 sin usar · vence 29/04/2027</div></div>
+<div class="cell m"><div class="k">((2))</div><div class="v">0</div><div class="l">Ronda actual</div><div class="d">Empieza mañana</div></div>
+<div class="cell m"><div class="k">((3))</div><div class="v">1 test</div><div class="l">31/10/2026</div><div class="d">Tutored Untimed · abandonado (39 omitidas)</div></div>
+<div class="cell m"><div class="k">((4))</div><div class="v">UWSA 1–3</div><div class="l">Disponibles</div><div class="d">Sin activar · 14 días de validez al activar</div></div>
+</div>
+<p class="note">leído de tu cuenta UWorld · STEP 1 QBank · 17/11 20:08 (hora de Chicago). El único test es del 31/10/2026, Tutored Untimed, 40 preguntas: 0 correctas, 1 incorrecta y 39 omitidas (0%). Quedó abandonado; no es un desempeño real. Ronda actual: 0 preguntas, empieza mañana.</p>
+</section>
+
+<section id="s-next">
+<div class="sh"><span class="no">04</span><h2>Próximo día: miércoles 18/11 · 7 h 30 min</h2></div>
+<div class="panel">
+<p class="cap">bloques de 30 min</p>
+<div class="segbar" id="daybar">
+  <div class="seg-part" data-blocks="7" data-c="var(--ac)"></div>
+  <div class="seg-part" data-blocks="5" data-c="var(--tx)"></div>
+  <div class="seg-part" data-blocks="2" data-c="#7a7a77"></div>
+  <div class="seg-part" data-blocks="1" data-c="#b8b8b4"></div>
+</div>
+<div class="blk"><div><span class="sq" style="background:var(--ac)"></span><b>Anki</b><small>Mínimo 500 tarjetas, separando nuevas y repasos</small></div><div>3 h 30 min</div></div>
+<div class="blk"><div><span class="sq" style="background:var(--tx)"></span><b>Videos B&amp;B</b><small>Gluconeogenesis (si no la terminas esta noche) + HMP Shunt (14:19); Fatty Acids (26:36) si hay tiempo</small></div><div>2 h 30 min</div></div>
+<div class="blk"><div><span class="sq" style="background:#7a7a77"></span><b>UWorld + revisión</b><small>10 a 15 preguntas no usadas, modo tutor (separadas de las de B&amp;B)</small></div><div>1 h</div></div>
+<div class="blk"><div><span class="sq" style="background:#b8b8b4"></span><b>Preguntas B&amp;B</b><small>De los temas del día, separadas de UWorld</small></div><div>30 min</div></div>
+</div>
+</section>
+
+<section id="s-plan">
+<div class="sh"><span class="no">05</span><h2>Calendario planificado</h2></div>
+<table><thead><tr><th>Fecha</th><th>Contenido</th><th>Estado</th></tr></thead><tbody id="plan"></tbody></table>
+</section>
+
+<section id="s-bio">
+<div class="sh"><span class="no">06</span><h2>Biochemistry</h2></div>
+<div id="bioleds"></div>
+<ul class="ck" id="bio"></ul>
+<p class="note">Checklist leído de tu cuenta B&amp;B el 17/11/2026 a las 20:00 (hora de Chicago): 10 de 28 lecciones completadas (36%). Gluconeogenesis: en curso hoy (declarado por ti; aún no figura como completada en la cuenta).</p>
+</section>
+
+<section id="s-mat">
+<div class="sh"><span class="no">07</span><h2>Progreso por materia</h2></div>
+<div class="seg" id="seg"></div>
+<table><thead><tr><th class="n">No.</th><th>Materia</th><th>Estado</th><th>Detalle</th></tr></thead><tbody id="mat"></tbody></table>
+</section>
+
+<section id="s-con">
+<div class="sh"><span class="no">08</span><h2>Conexiones y fuentes de datos</h2></div>
+<table><tbody>
+<tr><td><b>Anki (MacBook Air)</b><br><small>AnkiConnect instalado; prueba de lectura correcta el 17/11 a las 7:52 PM.</small></td><td><span class="pill ok">Conectado</span></td></tr>
+<tr><td><b>UWorld</b><br><small>Conectado en modo lectura. Última lectura 17/11 a las 20:08. Actualización automática a las 6:00 y 18:00 (hora de Chicago).</small></td><td><span class="pill ok">Conectado (lectura)</span></td></tr>
+<tr><td><b>Boards &amp; Beyond</b><br><small>Conectado en modo lectura. Última lectura 17/11 a las 20:00. Actualización automática a las 6:00 y 18:00 (hora de Chicago).</small></td><td><span class="pill ok">Conectado (lectura)</span></td></tr>
+<tr><td><b>Google Sheets (tracker)</b><br><small>Aún no conectado.</small></td><td><span class="pill wa">Sin conexión</span></td></tr>
+</tbody></table><p class="note">Nada se marca como completado sin un dato observado en tu cuenta o tu confirmación. Las fechas futuras son planificadas y se reajustan cada domingo.</p>
+</section>
+
+<div class="foot"><span>step 1 · dashboard de estudio</span><span>chicago</span></div>
+</div>
+<script>
+const plan=[
+  ["Mar 17/11","Glycogen Metabolism (completado en B&amp;B). Gluconeogenesis en curso hoy.","curso"],
+  ["Mié 18/11","HMP Shunt / (Gluconeogenesis si falta) / Fatty Acids"],
+  ["Jue 19/11","Fatty Acids, Ketone Bodies, Ethanol Metabolism"],
+  ["Vie 20/11","Exercise & Starvation, Inborn Errors of Metabolism, Amino Acids"],
+  ["Sáb 21/11","Examen UWorld 40 preguntas Timed + revisión, 500 Anki"],
+  ["Dom 22/11","500 Anki + repaso ligero"],
+  ["Lun 23/11","Phenylalanine & Tyrosine, Other Amino Acids, Ammonia"],
+  ["Mar 24/11","B Vitamins, B12 & Folate, Other Vitamins"],
+  ["Mié 25/11","Lipid Metabolism, Hyperlipidemia, Lipid Drugs, Lysosomal Storage Diseases"],
+  ["Jue 26/11","Iniciar Cell Biology"],
+  ["Vie 27/11","Continuar Cell Biology"],
+  ["Sáb 28/11","Examen semanal UWorld 40 preguntas Timed + revisión"]
+];
+function planStatus(s){
+  if(s===1) return '<span class="pill ok">Completado (declarado)</span>';
+  if(s==="curso") return '<span class="pill wa">En curso</span>';
+  return '<span class="pill">Planificado</span>';
+}
+document.getElementById("plan").innerHTML=plan.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${planStatus(r[2])}</td></tr>`).join("");
+const bio=[
+  ["DNA Structure",1,"Completado"],
+  ["Purine Metabolism",1,"Completado"],
+  ["Pyrimidine Metabolism",1,"Completado"],
+  ["Glucose",1,"Completado"],
+  ["Glycolysis",1,"Completado"],
+  ["Glycogen",1,"Completado"],
+  ["Fructose & Galactose",1,"Completado"],
+  ["Pyruvate Dehydrogenase",1,"Completado"],
+  ["TCA Cycle",1,"Completado"],
+  ["Electron Transport Chain",1,"Completado"],
+  ["Gluconeogenesis","curso","en curso hoy"],
+  ["HMP Shunt",0,"18/11"],
+  ["Fatty Acids",0,"18/11 si hay tiempo"],
+  ["Ketone Bodies",0,"19/11"],
+  ["Ethanol",0,"19/11"],
+  ["Exercise & Starvation",0,"20/11"],
+  ["Inborn Errors",0,"20/11"],
+  ["Amino Acids",0,"20/11"],
+  ["Phe & Tyr",0,"23/11"],
+  ["Other AA",0,"23/11"],
+  ["Ammonia",0,"23/11"],
+  ["B Vitamins",0,"24/11"],
+  ["B12 & Folate",0,"24/11"],
+  ["Other Vitamins",0,"24/11"],
+  ["Lipid Metabolism",0,"25/11"],
+  ["Hyperlipidemia",0,"25/11"],
+  ["Lipid Drugs",0,"25/11"],
+  ["Lysosomal Storage",0,"25/11"]
+];
+/* estado: 1 = completado (LED azul), "curso" = en curso (LED medio), 0 = pendiente (LED apagado) */
+function bioMark(s){
+  if(s===1) return '<span class="led on"></span>';
+  if(s==="curso") return '<span class="led half"></span>';
+  return '<span class="led"></span>';
+}
+const pad=n=>String(n).padStart(2,"0");
+document.getElementById("bio").innerHTML=bio.map((b,i)=>`<li class="${b[1]===1?'done':'todo'}"><em class="i">${pad(i+1)}</em>${bioMark(b[1])}<b style="font-weight:${b[1]===1?500:400}">${b[0]}</b><span>${b[2]}</span></li>`).join("");
+document.getElementById("bioleds").innerHTML=bio.map(b=>`<i class="${b[1]===1?'on':b[1]==='curso'?'half':''}" title="${b[0]}"></i>`).join("");
+const M=[
+  ["Genetics","c","100% · 12 videos"],
+  ["Basic Pharmacology","c","100% · 5 videos"],
+  ["Biochemistry","p","36% · 10/28 lecciones"],
+  ["Cell Biology","n","0%"],
+  ["Pathology (General)","n","0%"],
+  ["Immunology","n","0%"],
+  ["Infectious Disease","n","0%"],
+  ["Cardiology","n","0%"],
+  ["Pulmonary","n","0%"],
+  ["Renal","n","0%"],
+  ["Gastroenterology","n","0%"],
+  ["Endocrinology","n","0%"],
+  ["Reproductive","n","0%"],
+  ["Hematology","n","0%"],
+  ["Neurology","n","0%"],
+  ["Musculoskeletal","n","0%"],
+  ["Dermatology","n","0%"],
+  ["Psychiatry","n","0%"],
+  ["Behavioral Science","n","0%"],
+  ["Biostatistics/Epidemiology","n","0%"],
+  ["Ophthalmology","n","0%"],
+  ["Anesthesia","n","0%"]
+];
+const lab={c:'<span class="pill ok">Completado</span>',p:'<span class="pill wa">En progreso</span>',n:'<span class="pill">Pendiente</span>'};
+const F=[["all","Todas (22)"],["c","Completadas (2)"],["p","En progreso (1)"],["n","Pendientes (19)"]];let f="all";
+/* mini barra de 10 segmentos derivada del % al inicio del detalle */
+function mini(d){const p=parseInt(d,10)||0,on=Math.round(p/10);let s="";for(let i=0;i<10;i++)s+=`<i class="${i<on?'on':''}"></i>`;return `<span class="mini">${s}</span>&nbsp; `}
+function draw(){document.getElementById("seg").innerHTML=F.map(x=>`<button class="${x[0]==f?'on':''}" onclick="f='${x[0]}';draw()">${x[1]}</button>`).join("");document.getElementById("mat").innerHTML=M.map((m,i)=>[m,i]).filter(([m])=>f=="all"||m[1]==f).map(([m,i])=>`<tr><td class="n">${pad(i+1)}</td><td>${m[0]}</td><td>${lab[m[1]]}</td><td>${mini(m[2])}${m[2]}</td></tr>`).join("")}draw();
+
+/* barra del próximo día: data-blocks = bloques de 30 min */
+document.querySelectorAll("#daybar .seg-part").forEach(p=>{const n=+p.dataset.blocks;p.style.cssText=`flex:${n};display:flex;gap:3px`;p.innerHTML=Array.from({length:n},()=>`<div class="s" style="background:${p.dataset.c}"></div>`).join("")});
+
+const H={"2026-10-31":44,"2026-11-02":73,"2026-11-03":87,"2026-11-04":4,"2026-11-05":229,"2026-11-07":226,"2026-11-10":205,"2026-11-11":310,"2026-11-12":346,"2026-11-13":303,"2026-11-14":552,"2026-11-15":239,"2026-11-16":430,"2026-11-17":635};
+(function(){const days=[];for(let d=new Date(2026,9,31);d<=new Date(2026,10,17);d.setDate(d.getDate()+1)){const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");days.push([k,H[k]||0,d.getDate()])}
+const mx=700,SEG=14,h=document.getElementById("hist"),x=document.getElementById("histx");
+h.innerHTML=days.map(d=>{const on=d[1]>0?Math.max(1,Math.round(d[1]/(mx/SEG))):0;let s="";for(let i=0;i<SEG;i++)s+=`<i class="${i<on?'on':''}"></i>`;return `<div class="col${d[1]>=500?' goal':''}" title="${d[0]}: ${d[1]}">${s}</div>`}).join("")+`<div class="goalline" style="bottom:${500/mx*100}%"><span>500</span></div>`;
+x.innerHTML=days.map((d,i)=>`<div style="flex:1;text-align:center">${(i%3==0||i==days.length-1)?d[2]:""}</div>`).join("")})();
+</script></body></html>
