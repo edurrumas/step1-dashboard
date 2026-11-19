@@ -338,7 +338,7 @@ details summary .lbl{margin-left:auto}
   <div><div class="brand"><span><i>●</i> step&nbsp;1</span><span>usmle</span><span>rev. 2026</span></div><h1>Inicio</h1></div>
   <div class="top-meta">
     <button type="button" id="refresh" aria-label="Refresh">↻ REFRESH</button>
-    <span id="upd">Actualizado 18/11 22:30</span>
+    <span id="upd">Actualizado 18/11 23:06</span>
   </div>
 </header>
 
@@ -349,13 +349,13 @@ details summary .lbl{margin-left:auto}
 <!-- ANKI HOY: anillo (data-done / data-goal) -->
 <section class="card ringwrap" id="s-anki">
   <h2 style="align-self:stretch"><span><em class="no">00</em>Anki hoy</span> <i>●</i></h2>
-  <div id="ring" data-done="301" data-goal="500"></div>
+  <div id="ring" data-done="624" data-goal="500"></div>
   <span class="badge" id="ringbadge"></span>
   <div class="kvs">
-    <div class="kv"><span>Distintas</span><b>176</b></div>
-    <div class="kv"><span>Nuevas</span><b>75</b></div>
-    <div class="kv"><span>Repasos</span><b>101</b></div>
-    <div class="kv"><span>Vencidas</span><b>177</b></div>
+    <div class="kv"><span>Distintas</span><b>380</b></div>
+    <div class="kv"><span>Nuevas</span><b>125</b></div>
+    <div class="kv"><span>Repasos</span><b>255</b></div>
+    <div class="kv"><span>Vencidas</span><b>23</b></div>
     <div class="kv" id="anki-again"></div>
   </div>
 </section>
@@ -576,7 +576,7 @@ function draw(){document.getElementById("seg").innerHTML=F.map(x=>`<button class
 /* fechas límite (cuenta regresiva en días, calculada) */
 const D={examen:"2027-04-30",uworld:"2027-04-29"};
 
-const H={"2026-10-31":44,"2026-11-02":73,"2026-11-03":87,"2026-11-04":4,"2026-11-05":229,"2026-11-07":226,"2026-11-10":205,"2026-11-11":310,"2026-11-12":346,"2026-11-13":303,"2026-11-14":552,"2026-11-15":239,"2026-11-16":430,"2026-11-17":635,"2026-11-18":301};
+const H={"2026-10-31":44,"2026-11-02":73,"2026-11-03":87,"2026-11-04":4,"2026-11-05":229,"2026-11-07":226,"2026-11-10":205,"2026-11-11":310,"2026-11-12":346,"2026-11-13":303,"2026-11-14":552,"2026-11-15":239,"2026-11-16":430,"2026-11-17":635,"2026-11-18":624};
 const key=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 
 /* histograma de cuadritos: 1 cuadrito = 50 respuestas; líneas META 500 y MÍNIMO 250 */
@@ -614,7 +614,7 @@ document.getElementById("cd-ex").textContent=D.examen?dd(D.examen):"—";documen
 document.getElementById("hitos").innerHTML=plan.filter(r=>r[2]!==1).slice(0,4).map(r=>`<div class="hito"><span class="f">${r[0]}</span><span>${r[1]}</span></div>`).join("")||"—";
 
 /* 00 Anki hoy · Again (solo valores ya observados; null = "—") */
-const ANKI_HOY={reviews:301, again:30, again_cards:26, again_pct:10};
+const ANKI_HOY={reviews:624, again:58, again_cards:49, again_pct:9};
 (function(){
   const el=document.getElementById("anki-again"); if(!el) return;
   const a=ANKI_HOY, V=x=>(x===null||x===undefined||x==="")?"—":x;
@@ -686,14 +686,14 @@ ${b.nota?`<p class="note">${b.nota}</p>`:""}`})();
 const REPORTS={
   "2026-11-18":{
       fecha:"mié 18/11",
-      anki:{hechas:301, meta:500, min:250, nuevas:75, repasos:226, vencidas:null, estado:"medio"},
-      preg:{hoy:null, pct_hoy:null, total:null, pct_total:null,
+      anki:{hechas:624, meta:500, min:250, nuevas:125, repasos:499, vencidas:23, estado:"ok"},
+      preg:{hoy:19, hoy_min:true, pct_hoy:null, total:null, pct_total:null,
             bb:{hoy:19, hoy_min:true, pct_hoy:89.5, total:140, pct_total:84.4},
-            uw:{hoy:0, pct_hoy:null, total:null, pct_total:null},
+            uw:{hoy:null, pct_hoy:null, total:null, pct_total:null},
             hist:null, estado:"medio"},
       bloques:[
         {n:"Videos B&B", valor:"4 videos: HMP Shunt, Fatty Acids, Ketone Bodies, Ethanol Metabolism", detalle:null, estado:"ok"},
-        {n:"UWorld",     valor:"0 hoy", detalle:"meta 10–15", estado:"no"}
+        {n:"UWorld",     valor:null, detalle:"meta 10–15", estado:"sd"}
       ],
       base:"Biochem 15/28 · plan: terminar Biochem 24/11",
       manana:"Exercise & Starvation · 500 Anki · 10–15 UWorld"
