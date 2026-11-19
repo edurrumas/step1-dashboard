@@ -18,6 +18,11 @@
                                       (rango de días: bucle new Date(2026,9,31) .. new Date(2026,10,18))
   · Resumen (antes "00") ............ <section id="s-resumen">: tarjetas .big (.v valor, .l etiqueta, .d detalle)
   · Biochem (tarjeta) ............... valor 10/28 y % en #s-resumen; mini barras #bioleds salen de const bio
+  · Preguntas hoy (módulo 01) ...... const TODAY_Q en el <script> → #today-q dentro de #s-resumen (01)
+        TODAY_Q = {fecha, bb:{hechas, correctas, incorrectas, pct, quizzes:[{n, correctas, de}]},
+                   uw:{hechas, correctas, incorrectas, pct}}
+        null → "—"; hechas 0 → se muestra 0 (sin % inventado); quizzes vacío → solo el total B&B + UWorld
+        La rutina de sync actualiza TODAY_Q cada día (no se archiva aquí; el reporte nocturno va a REPORTS).
   · Boards & Beyond ................. <section id="s-bb">: barras finas .tb con data-v / data-max (y data-u = sufijo)
   · UWorld .......................... <section id="s-uw">: barra .tb data-v="40" data-max="3665" + filas .kv + nota .note
   · Cuenta regresiva ................ const D = {examen:"2027-04-30", uworld:"2027-04-29"} (días calculados en JS)
@@ -37,7 +42,7 @@
         Copia PNG opcional en el sitio: reports/AAAA-MM-DD.png (el modal usa los datos embebidos, funciona offline).
   · Detalle (09–11) ................. calendario, Biochemistry, materias (<details>)
   · Conexiones ...................... <section id="s-con" hidden> (no visible; estado con .pill ok / .pill wa)
-  Ids que usa el script: week, ring, hist, histx, plan, bio, bioleds, seg, mat, daybar, cd-ex, cd-uw, hitos, perf-uw, perf-bb, rpm, rpbody.
+  Ids que usa el script: week, ring, hist, histx, plan, bio, bioleds, seg, mat, daybar, cd-ex, cd-uw, hitos, perf-uw, perf-bb, today-q, rpm, rpbody.
 -->
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Dashboard Step 1</title><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Step 1"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#eeeeec">
@@ -206,6 +211,13 @@ h1{font-weight:500;margin-top:10px}
 .top-meta{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
 #refresh{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--tx);background:transparent;border:1px solid var(--tx);border-radius:2px;padding:4px 8px;cursor:pointer;-webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
 #refresh:active{background:var(--ac);border-color:var(--ac);color:#fff}
+#today-q{margin-top:14px;padding-top:12px;border-top:1px solid var(--tx)}
+#today-q .q-sum{display:flex;justify-content:space-between;align-items:flex-end;gap:8px;margin:2px 0 8px}
+#today-q .q-sum .v{font-size:26px;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+#today-q .q-sum .v small{font-size:12px;color:var(--tx3)}
+#today-q .q-sum .pl{font-family:var(--mono);font-size:16px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1;text-align:right}
+#today-q .q-sum .pl span{display:block;font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:var(--tx2);margin-top:4px}
+#today-q .tb{margin:0 0 2px}
 .card{border:1px solid var(--line);border-top:2px solid var(--tx)}
 .card h2{color:var(--tx);border-bottom:1px solid var(--tx);padding-bottom:8px}
 .card h2 .no,summary .no{font-style:normal;color:var(--ac);margin-right:10px;font-family:var(--mono);font-size:10px;font-weight:500}
@@ -350,6 +362,7 @@ details summary .lbl{margin-left:auto}
   <div id="bioleds"></div>
   <div class="kv" style="margin-top:12px"><span>Materias B&amp;B</span><b>2 / 22</b></div>
   <div class="d">Genetics, Basic Pharmacology</div>
+  <div id="today-q"></div>
 </section>
 
 <!-- ANKI POR DÍA -->
@@ -591,6 +604,39 @@ document.getElementById("cd-ex").textContent=D.examen?dd(D.examen):"—";documen
 
 /* próximos hitos: primeras 4 filas de plan no completadas */
 document.getElementById("hitos").innerHTML=plan.filter(r=>r[2]!==1).slice(0,4).map(r=>`<div class="hito"><span class="f">${r[0]}</span><span>${r[1]}</span></div>`).join("")||"—";
+
+/* 01 Preguntas hoy · datos editables (solo valores ya observados; null = "—"; hechas 0 → 0, sin % inventado) */
+const TODAY_Q={
+  fecha:"2026-11-18",
+  bb:{hechas:19, correctas:17, incorrectas:2, pct:89.5, quizzes:[
+    {n:"HMP Shunt", correctas:5, de:6},
+    {n:"Fatty Acids", correctas:4, de:5},
+    {n:"Ketone Bodies", correctas:3, de:3},
+    {n:"Ethanol Metabolism", correctas:5, de:5}
+  ]},
+  uw:{hechas:0, correctas:null, incorrectas:null, pct:null}
+};
+(function(){
+  const el=document.getElementById("today-q"); if(!el) return;
+  const V=x=>(x===null||x===undefined||x==="")?"—":x, P=x=>(x===null||x===undefined)?"—":x+"%";
+  const bb=TODAY_Q.bb||{}, uw=TODAY_Q.uw||{}, Qz=bb.quizzes||[];
+  const bbN=typeof bb.hechas==="number";
+  const bar=(bbN&&bb.hechas>0&&typeof bb.correctas==="number")
+    ? `<div class="tb"><div class="bar"><i style="width:${Math.min(100,bb.correctas/bb.hechas*100)}%"></i></div></div>` : "";
+  const quizzes=Qz.map(q=>`<div class="kv"><span>${q.n}</span><b>${V(q.correctas)}/${V(q.de)}</b></div>`).join("");
+  const bbSub=bbN&&bb.hechas>0?`${V(bb.correctas)} bien · ${V(bb.incorrectas)} mal`:"";
+  let uwTxt="—";
+  if(uw.hechas===0) uwTxt="0";
+  else if(typeof uw.hechas==="number"){
+    uwTxt=uw.correctas!=null?`${uw.correctas}/${uw.hechas}`:String(uw.hechas);
+    if(uw.pct!=null) uwTxt+=` · ${uw.pct}%`;
+  }
+  el.innerHTML=`<div class="k">((2)) Preguntas hoy</div>
+    <div class="q-sum"><div><div class="v">${bbN?bb.hechas:"—"}<small> B&amp;B</small></div><div class="d">${bbSub}</div></div>
+    <div class="pl">${bbN&&bb.hechas>0?P(bb.pct):"—"}<span>correctas</span></div></div>
+    ${bar}${quizzes}
+    <div class="kv"><span>UWorld hoy</span><b>${uwTxt}</b></div>`;
+})();
 
 /* 08 RENDIMIENTO · datos editables (solo valores ya observados; null = "—") */
 const PERF={
