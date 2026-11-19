@@ -8,6 +8,7 @@
   Fuentes (solo para mantenimiento): Anki = Mac apagado en este sync; última AnkiConnect 18/11 23:38 (624). AnkiWeb (solo pendientes) 19/11 07:11 (AnKing 167 due / 50 new; Eduche 107 due / 50 new; no hay revisiones del día).
   B&B = login vencido el 19/11 07:11; última lectura verificada 18/11 23:09 (6%, Biochem 15/28, 140/3701 a 84.4%).
   UWorld = lectura 19/11 07:11 (60/3662 usados, 2%; Test #2 creado 19/11 20q Biochem Tutor, sin puntaje; Test 31/10 no cuenta).
+  Plan/horario actualizado 19/11 12:00: orden confirmado Biochem → Cell Biology → Pathology; sábados 60 Tutor; fechas del calendario recalculadas.
 
   · Timestamp ....................... <span id="upd">Actualizado DD/MM HH:MM</span>
   · Semana (círculos lun–dom) ....... automática con la fecha del teléfono; número bajo cada día = H[fecha]
@@ -338,7 +339,7 @@ details summary .lbl{margin-left:auto}
   <div><div class="brand"><span><i>●</i> step&nbsp;1</span><span>usmle</span><span>rev. 2026</span></div><h1>Inicio</h1></div>
   <div class="top-meta">
     <button type="button" id="refresh" aria-label="Refresh">↻ REFRESH</button>
-    <span id="upd">Actualizado 19/11 07:11</span>
+    <span id="upd">Actualizado 19/11 12:00</span>
   </div>
 </header>
 
@@ -394,7 +395,7 @@ details summary .lbl{margin-left:auto}
     <div class="seg-part" data-blocks="1" data-c="#c4c4c0"></div>
   </div>
   <div class="row" data-blocks="7" data-c="var(--ac)"><span class="dot"></span><div><b>Anki</b><small>Mínimo 500 tarjetas, separando nuevas y repasos</small></div><span class="t">3 h 30</span></div>
-  <div class="row" data-blocks="5" data-c="var(--tx)"><span class="dot"></span><div><b>Videos B&amp;B</b><small>Exercise &amp; Starvation, Inborn Errors, Amino Acids, Phe &amp; Tyr, Other AA, Ammonia, B Vitamins</small></div><span class="t">2 h 30</span></div>
+  <div class="row" data-blocks="5" data-c="var(--tx)"><span class="dot"></span><div><b>Videos B&amp;B</b><small>Exercise &amp; Starvation, Inborn Errors, Amino Acids, Phe &amp; Tyr, Other AA, Ammonia</small></div><span class="t">2 h 30</span></div>
   <div class="row" data-blocks="2" data-c="#8a8a87"><span class="dot"></span><div><b>UWorld + revisión</b><small>Test #2 · 20 preguntas Tutor unused, Biochem (ya creado; sin puntaje aún)</small></div><span class="t">1 h</span></div>
   <div class="row" data-blocks="1" data-c="#c4c4c0"><span class="dot"></span><div><b>Preguntas B&amp;B</b><small>De los temas del día, separadas de UWorld</small></div><span class="t">30 min</span></div>
 </section>
@@ -456,12 +457,12 @@ details summary .lbl{margin-left:auto}
 
 <details class="card" id="s-plan"><summary><em class="no">09</em>Calendario planificado <span class="lbl"></span></summary><div class="body">
 <table><thead><tr><th>Fecha</th><th>Contenido</th><th>Estado</th></tr></thead><tbody id="plan"></tbody></table>
-<p class="note">Las fechas futuras son planificadas y se reajustan cada domingo.</p>
+<p class="note">Orden confirmado el 19/11: después de Biochem, Cell Biology y luego Pathology (General). Sábados: 60 preguntas Tutor. Las fechas futuras son planificadas y se reajustan cada domingo.</p>
 </div></details>
 
 <details class="card" id="s-bio"><summary><em class="no">10</em>Biochemistry <span class="lbl">15 / 28</span></summary><div class="body">
 <ul class="ck" id="bio"></ul>
-<p class="note">15 de 28 lecciones completadas (54%). Siguiente: Exercise &amp; Starvation.</p>
+<p class="note">15 de 28 lecciones completadas (54%). Hoy: 6 videos (Exercise &amp; Starvation a Ammonia). B Vitamins mañana. Biochem termina el 23/11.</p>
 </div></details>
 
 <details class="card" id="s-mat"><summary><em class="no">11</em>Progreso por materia <span class="lbl">2 / 22</span></summary><div class="body">
@@ -487,16 +488,16 @@ details summary .lbl{margin-left:auto}
 const plan=[
   ["Mar 17/11","Glycogen Metabolism + Gluconeogenesis (completados en B&amp;B)",1],
   ["Mié 18/11","HMP Shunt, Fatty Acids, Ketone Bodies, Ethanol Metabolism (completados en B&amp;B)",1],
-  ["Jue 19/11","Exercise &amp; Starvation, Inborn Errors, Amino Acids, Phe &amp; Tyr, Other AA, Ammonia, B Vitamins","curso"],
-  ["Vie 20/11","Exercise & Starvation, Inborn Errors of Metabolism, Amino Acids"],
-  ["Sáb 21/11","Examen UWorld 40 preguntas Timed + revisión, 500 Anki"],
+  ["Jue 19/11","Exercise &amp; Starvation, Inborn Errors, Amino Acids, Phe &amp; Tyr, Other AA, Ammonia","curso"],
+  ["Vie 20/11","B Vitamins, B12 &amp; Folate, Other Vitamins, Lipid Metabolism"],
+  ["Sáb 21/11","Examen UWorld 60 preguntas Tutor + revisión, 500 Anki"],
   ["Dom 22/11","500 Anki + repaso ligero"],
-  ["Lun 23/11","Phenylalanine & Tyrosine, Other Amino Acids, Ammonia"],
-  ["Mar 24/11","B Vitamins, B12 & Folate, Other Vitamins"],
-  ["Mié 25/11","Lipid Metabolism, Hyperlipidemia, Lipid Drugs, Lysosomal Storage Diseases"],
-  ["Jue 26/11","Iniciar Cell Biology"],
-  ["Vie 27/11","Continuar Cell Biology"],
-  ["Sáb 28/11","Examen semanal UWorld 40 preguntas Timed + revisión"]
+  ["Lun 23/11","Hyperlipidemia, Lipid Drugs, Lysosomal Storage; inicia Cell Biology (DNA Replication, DNA Mutations)"],
+  ["Mar 24/11","Cell Biology: DNA Repair, Transcription, Translation, PCR, Blotting, Flow Cytometry"],
+  ["Mié 25/11","Termina Cell Biology (ELISA, Microarrays and FISH, Cell Cycle, Cell Structure, Cytoskeleton, Connective Tissue)"],
+  ["Jue 26/11","Inicia Pathology: Cellular Adaptations, Cell Injury, Free Radicals, Apoptosis, Necrosis, Inflammation Principles"],
+  ["Vie 27/11","Termina Pathology (Inflammation, Wound Healing, Calcification, Neoplasia)"],
+  ["Sáb 28/11","Examen semanal UWorld 60 preguntas Tutor + revisión"]
 ];
 function planStatus(s){
   if(s===1) return '<span class="pill ok">Completado (declarado)</span>';
@@ -520,19 +521,19 @@ const bio=[
   ["Fatty Acids",1,"Completado"],
   ["Ketone Bodies",1,"Completado"],
   ["Ethanol",1,"Completado"],
-  ["Exercise & Starvation",0,"20/11"],
-  ["Inborn Errors",0,"20/11"],
-  ["Amino Acids",0,"20/11"],
-  ["Phe & Tyr",0,"23/11"],
-  ["Other AA",0,"23/11"],
-  ["Ammonia",0,"23/11"],
-  ["B Vitamins",0,"24/11"],
-  ["B12 & Folate",0,"24/11"],
-  ["Other Vitamins",0,"24/11"],
-  ["Lipid Metabolism",0,"25/11"],
-  ["Hyperlipidemia",0,"25/11"],
-  ["Lipid Drugs",0,"25/11"],
-  ["Lysosomal Storage",0,"25/11"]
+  ["Exercise & Starvation","curso","hoy 19/11"],
+  ["Inborn Errors","curso","hoy 19/11"],
+  ["Amino Acids","curso","hoy 19/11"],
+  ["Phe & Tyr","curso","hoy 19/11"],
+  ["Other AA","curso","hoy 19/11"],
+  ["Ammonia","curso","hoy 19/11"],
+  ["B Vitamins",0,"20/11"],
+  ["B12 & Folate",0,"20/11"],
+  ["Other Vitamins",0,"20/11"],
+  ["Lipid Metabolism",0,"20/11"],
+  ["Hyperlipidemia",0,"23/11"],
+  ["Lipid Drugs",0,"23/11"],
+  ["Lysosomal Storage",0,"23/11"]
 ];
 /* estado: 1 = completado (LED azul), "curso" = en curso (LED medio), 0 = pendiente (LED apagado) */
 function bioMark(s){
