@@ -13,6 +13,10 @@
   · Semana (círculos lun–dom) ....... automática con la fecha del teléfono; número bajo cada día = H[fecha]
   · Anki hoy (anillo) ............... <section id="s-anki">: <div id="ring" data-done="635" data-goal="500">
                                       filas .kv: distintas / nuevas / repasos / vencidas (valor en <b>)
+                                      const ANKI_HOY → #anki-again: {reviews, again, again_cards, again_pct}
+                                      again = presiones Again hoy (Again count de getCollectionStatsHTML);
+                                      again_cards = unique findCards "rated:1:1"; again_pct = Math.round(again/reviews*100)
+                                      La rutina de sync actualiza ANKI_HOY cada día.
   · Anki por día (cuadritos) ........ const H = {"YYYY-MM-DD": respuestas} en el <script>; 1 cuadrito = 50;
                                       líneas META 500 y MÍNIMO 250; colores: ≥500 / 250–499 / <250 / último día azul
                                       (rango de días: bucle new Date(2026,9,31) .. new Date(2026,10,18))
@@ -42,7 +46,7 @@
         Copia PNG opcional en el sitio: reports/AAAA-MM-DD.png (el modal usa los datos embebidos, funciona offline).
   · Detalle (09–11) ................. calendario, Biochemistry, materias (<details>)
   · Conexiones ...................... <section id="s-con" hidden> (no visible; estado con .pill ok / .pill wa)
-  Ids que usa el script: week, ring, hist, histx, plan, bio, bioleds, seg, mat, daybar, cd-ex, cd-uw, hitos, perf-uw, perf-bb, today-q, rpm, rpbody.
+  Ids que usa el script: week, ring, hist, histx, plan, bio, bioleds, seg, mat, daybar, cd-ex, cd-uw, hitos, perf-uw, perf-bb, today-q, anki-again, rpm, rpbody.
 -->
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Dashboard Step 1</title><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Step 1"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#eeeeec">
@@ -92,6 +96,8 @@ h1{font-size:34px;font-weight:600;letter-spacing:-.03em;margin:4px 0 0;line-heig
 
 /* ring */
 .ringwrap{display:flex;flex-direction:column;align-items:center}
+#s-anki,#s-resumen,#s-hist{align-self:stretch;display:flex;flex-direction:column}
+#s-anki .kvs{margin-top:auto}
 #ring{position:relative;width:128px;height:128px}
 #ring svg{width:100%;height:100%;transform:rotate(-90deg)}
 #ring .in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
@@ -322,6 +328,7 @@ details summary .lbl{margin-left:auto}
   .cdgrid{display:block}
   .cdgrid .cd + .cd{margin-top:14px;padding:14px 0 0;border-left:0;border-top:1px solid var(--line)}
   .grid{align-items:start}
+  #s-anki,#s-resumen,#s-hist{align-self:stretch;height:100%}
   ul.ck{grid-template-columns:1fr 1fr;grid-auto-flow:column;grid-template-rows:repeat(14,auto)}
   .card{padding:20px}
 }
@@ -349,6 +356,7 @@ details summary .lbl{margin-left:auto}
     <div class="kv"><span>Nuevas</span><b>75</b></div>
     <div class="kv"><span>Repasos</span><b>101</b></div>
     <div class="kv"><span>Vencidas</span><b>177</b></div>
+    <div class="kv" id="anki-again"></div>
   </div>
 </section>
 
@@ -604,6 +612,16 @@ document.getElementById("cd-ex").textContent=D.examen?dd(D.examen):"—";documen
 
 /* próximos hitos: primeras 4 filas de plan no completadas */
 document.getElementById("hitos").innerHTML=plan.filter(r=>r[2]!==1).slice(0,4).map(r=>`<div class="hito"><span class="f">${r[0]}</span><span>${r[1]}</span></div>`).join("")||"—";
+
+/* 00 Anki hoy · Again (solo valores ya observados; null = "—") */
+const ANKI_HOY={reviews:301, again:30, again_cards:26, again_pct:10};
+(function(){
+  const el=document.getElementById("anki-again"); if(!el) return;
+  const a=ANKI_HOY, V=x=>(x===null||x===undefined||x==="")?"—":x;
+  if(typeof a.again!=="number"||typeof a.reviews!=="number"||!a.reviews){el.innerHTML="<span>AGAIN</span><b>—</b>";return;}
+  const pct=typeof a.again_pct==="number"?a.again_pct:Math.round(a.again/a.reviews*100);
+  el.innerHTML=`<span>AGAIN</span><b>${V(a.again)} · ${pct}%</b>`;
+})();
 
 /* 01 Preguntas hoy · datos editables (solo valores ya observados; null = "—"; hechas 0 → 0, sin % inventado) */
 const TODAY_Q={
