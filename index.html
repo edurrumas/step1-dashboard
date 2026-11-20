@@ -5,10 +5,10 @@
   index_backup_pre_cards_2026-11-17.html (versión teenage engineering).
   Estilo: capa "teenage engineering" al final del <style> (paneles con borde, numeración 00–10, marcadores ((n))).
   Regla: en pantalla NO se muestran notas de fuente/procedencia; solo el timestamp de #upd.
-  Fuentes (solo para mantenimiento): Anki = AnkiConnect 19/11 18:04 (172 revisiones, 97 distintas, 50 nuevas, 47 repasos, 227 vencidas, Again 10/172 = 6%, 35.35 min). Mac conectado.
-  B&B = login vencido el 19/11 18:04 (redirigió a /login); última lectura verificada 18/11 23:09 (6%, Biochem 15/28, 140/3701 a 84.4%).
-  UWorld = lectura 19/11 18:04 (60/3662 usados, 2%; Test #2 19/11 20q Biochem Tutor, 50% = 10/20; Test 31/10 no cuenta). Question Score del dashboard 17% incluye el test abandonado (10/60).
-  Plan/horario actualizado 19/11 12:00: orden confirmado Biochem → Cell Biology → Pathology; sábados 60 Tutor; fechas del calendario recalculadas.
+  Fuentes (solo para mantenimiento): Anki = Mac apagado en este sync (20/11 07:03); última AnkiConnect 19/11 18:04 (172 revisiones, 97 distintas, 50 nuevas, 47 repasos, 227 vencidas, Again 10/172 = 6%, 35.35 min). AnkiWeb (solo pendientes; columnas tomadas como due/new, sin total general) 20/11 07:03: Eduche Step 1 Deck - BB 127/50; AnKing 218/50 (Zanki Step 1 Decks 195/50).
+  B&B = login vencido el 20/11 07:03 (redirigió a https://www.boardsbeyond.com/login); última lectura verificada 18/11 23:09 (6%, Biochem 15/28, 140/3701 a 84.4%).
+  UWorld = sesión vencida el 20/11 07:03 en https://www.uworld.com/account/app/v37/subscriptions ("Your Session has expired"); no se leyó el dashboard ni Previous Tests. Última lectura verificada 19/11 18:04 (60/3662 usados, 2%; Test #2 19/11 20q Biochem Tutor, 50% = 10/20; Test 31/10 no cuenta). Question Score del dashboard 17% incluye el test abandonado (10/60).
+  Plan/horario: viernes 20/11 retoma los 6 videos de Biochem no completados el 19/11 (Exercise & Starvation a Ammonia); vitaminas y Lipid Metabolism pasan al 21/11. Orden confirmado Biochem → Cell Biology → Pathology; sábados 60 Tutor.
 
   · Timestamp ....................... <span id="upd">Actualizado DD/MM HH:MM</span>
   · Semana (círculos lun–dom) ....... automática con la fecha del teléfono; número bajo cada día = H[fecha]
@@ -20,7 +20,7 @@
                                       La rutina de sync actualiza ANKI_HOY cada día.
   · Anki por día (cuadritos) ........ const H = {"YYYY-MM-DD": respuestas} en el <script>; 1 cuadrito = 50;
                                       líneas META 500 y MÍNIMO 250; colores: ≥500 / 250–499 / <250 / último día azul
-                                      (rango de días: bucle new Date(2026,9,31) .. new Date(2026,10,19))
+                                      (rango de días: bucle new Date(2026,9,31) .. hoy, fin de día local)
   · Resumen (antes "00") ............ <section id="s-resumen">: tarjetas .big (.v valor, .l etiqueta, .d detalle)
   · Biochem (tarjeta) ............... valor 10/28 y % en #s-resumen; mini barras #bioleds salen de const bio
   · Preguntas hoy (módulo 01) ...... const TODAY_Q en el <script> → #today-q dentro de #s-resumen (01)
@@ -339,7 +339,7 @@ details summary .lbl{margin-left:auto}
   <div><div class="brand"><span><i>●</i> step&nbsp;1</span><span>usmle</span><span>rev. 2026</span></div><h1>Inicio</h1></div>
   <div class="top-meta">
     <button type="button" id="refresh" aria-label="Refresh">↻ REFRESH</button>
-    <span id="upd">Actualizado 19/11 18:04</span>
+    <span id="upd">Actualizado 20/11 07:03</span>
   </div>
 </header>
 
@@ -350,13 +350,13 @@ details summary .lbl{margin-left:auto}
 <!-- ANKI HOY: anillo (data-done / data-goal) -->
 <section class="card ringwrap" id="s-anki">
   <h2 style="align-self:stretch"><span><em class="no">00</em>Anki hoy</span> <i>●</i></h2>
-  <div id="ring" data-done="172" data-goal="500"></div>
+  <div id="ring" data-done="" data-goal="500"></div>
   <span class="badge" id="ringbadge"></span>
   <div class="kvs">
-    <div class="kv"><span>Distintas</span><b>97</b></div>
-    <div class="kv"><span>Nuevas</span><b>50</b></div>
-    <div class="kv"><span>Repasos</span><b>47</b></div>
-    <div class="kv"><span>Vencidas</span><b>227</b></div>
+    <div class="kv"><span>Distintas</span><b>—</b></div>
+    <div class="kv"><span>Nuevas</span><b>—</b></div>
+    <div class="kv"><span>Repasos</span><b>—</b></div>
+    <div class="kv"><span>Vencidas</span><b>—</b></div>
     <div class="kv" id="anki-again"></div>
   </div>
 </section>
@@ -385,7 +385,7 @@ details summary .lbl{margin-left:auto}
 <section class="card w2" id="s-next">
   <h2><span><em class="no">03</em>Hoy toca</span></h2>
   <div class="daytop">
-    <div><div style="font-size:20px;font-weight:600;letter-spacing:-.02em">jueves 19/11</div></div>
+    <div><div style="font-size:20px;font-weight:600;letter-spacing:-.02em">viernes 20/11</div></div>
     <div class="num" style="font-size:13px;color:var(--tx2)">7 h 30 min</div>
   </div>
   <div id="daybar">
@@ -396,7 +396,7 @@ details summary .lbl{margin-left:auto}
   </div>
   <div class="row" data-blocks="7" data-c="var(--ac)"><span class="dot"></span><div><b>Anki</b><small>Mínimo 500 tarjetas, separando nuevas y repasos</small></div><span class="t">3 h 30</span></div>
   <div class="row" data-blocks="5" data-c="var(--tx)"><span class="dot"></span><div><b>Videos B&amp;B</b><small>Exercise &amp; Starvation, Inborn Errors, Amino Acids, Phe &amp; Tyr, Other AA, Ammonia</small></div><span class="t">2 h 30</span></div>
-  <div class="row" data-blocks="2" data-c="#8a8a87"><span class="dot"></span><div><b>UWorld + revisión</b><small>Test #2 · 20 preguntas Tutor, Biochem · 10/20 (50%)</small></div><span class="t">1 h</span></div>
+  <div class="row" data-blocks="2" data-c="#8a8a87"><span class="dot"></span><div><b>UWorld + revisión</b><small>20 preguntas Tutor, solo temas B&amp;B ya vistos</small></div><span class="t">1 h</span></div>
   <div class="row" data-blocks="1" data-c="#c4c4c0"><span class="dot"></span><div><b>Preguntas B&amp;B</b><small>De los temas del día, separadas de UWorld</small></div><span class="t">30 min</span></div>
 </section>
 
@@ -462,7 +462,7 @@ details summary .lbl{margin-left:auto}
 
 <details class="card" id="s-bio"><summary><em class="no">10</em>Biochemistry <span class="lbl">15 / 28</span></summary><div class="body">
 <ul class="ck" id="bio"></ul>
-<p class="note">15 de 28 lecciones completadas (54%). Hoy: 6 videos (Exercise &amp; Starvation a Ammonia). B Vitamins mañana. Biochem termina el 23/11.</p>
+<p class="note">15 de 28 lecciones completadas (54%). Hoy: 6 videos (Exercise &amp; Starvation a Ammonia). Vitaminas y Lipid Metabolism mañana 21/11. Biochem termina el 23/11.</p>
 </div></details>
 
 <details class="card" id="s-mat"><summary><em class="no">11</em>Progreso por materia <span class="lbl">2 / 22</span></summary><div class="body">
@@ -473,9 +473,9 @@ details summary .lbl{margin-left:auto}
 <!-- CONEXIONES: oculto en pantalla (hidden), se mantiene para los routines -->
 <section id="s-con" hidden>
 <table><tbody>
-<tr><td><b>Anki (MacBook Air)</b><br><small>AnkiConnect instalado; última lectura 18/11 a las 18:15 (301 reseñas en curso).</small></td><td><span class="pill ok">Conectado</span></td></tr>
-<tr><td><b>UWorld</b><br><small>Conectado en modo lectura. Última lectura 18/11 a las 18:07. Sin tests nuevos en la ronda actual (sigue 40/3665; el test del 31/10 no cuenta).</small></td><td><span class="pill ok">Conectado (lectura)</span></td></tr>
-<tr><td><b>Boards &amp; Beyond</b><br><small>Conectado en modo lectura. Última lectura 18/11 a las 18:15.</small></td><td><span class="pill ok">Conectado (lectura)</span></td></tr>
+<tr><td><b>Anki (MacBook Air)</b><br><small>Mac apagado el 20/11 07:03. Última AnkiConnect 19/11 18:04 (172). AnkiWeb pendientes 20/11 07:03: Eduche 127/50, AnKing 218/50.</small></td><td><span class="pill wa">Mac apagado</span></td></tr>
+<tr><td><b>UWorld</b><br><small>Sesión vencida el 20/11 07:03. Última lectura 19/11 18:04 (60/3662; Test #2 10/20).</small></td><td><span class="pill wa">Login vencido</span></td></tr>
+<tr><td><b>Boards &amp; Beyond</b><br><small>Login vencido el 20/11 07:03. Última lectura verificada 18/11 23:09 (6%, 15/28, 140/3701 a 84.4%).</small></td><td><span class="pill wa">Login vencido</span></td></tr>
 <tr><td><b>Google Sheets (tracker)</b><br><small>Aún no conectado.</small></td><td><span class="pill wa">Sin conexión</span></td></tr>
 </tbody></table>
 </section>
@@ -488,9 +488,9 @@ details summary .lbl{margin-left:auto}
 const plan=[
   ["Mar 17/11","Glycogen Metabolism + Gluconeogenesis (completados en B&amp;B)",1],
   ["Mié 18/11","HMP Shunt, Fatty Acids, Ketone Bodies, Ethanol Metabolism (completados en B&amp;B)",1],
-  ["Jue 19/11","Exercise &amp; Starvation, Inborn Errors, Amino Acids, Phe &amp; Tyr, Other AA, Ammonia","curso"],
-  ["Vie 20/11","B Vitamins, B12 &amp; Folate, Other Vitamins, Lipid Metabolism"],
-  ["Sáb 21/11","Examen UWorld 60 preguntas Tutor + revisión, 500 Anki"],
+  ["Jue 19/11","Exercise &amp; Starvation, Inborn Errors, Amino Acids, Phe &amp; Tyr, Other AA, Ammonia (no completados; pasan a hoy)"],
+  ["Vie 20/11","Exercise &amp; Starvation, Inborn Errors, Amino Acids, Phe &amp; Tyr, Other AA, Ammonia","curso"],
+  ["Sáb 21/11","Examen UWorld 60 preguntas Tutor + revisión, 500 Anki; B Vitamins, B12 &amp; Folate, Other Vitamins, Lipid Metabolism"],
   ["Dom 22/11","500 Anki + repaso ligero"],
   ["Lun 23/11","Hyperlipidemia, Lipid Drugs, Lysosomal Storage; inicia Cell Biology (DNA Replication, DNA Mutations)"],
   ["Mar 24/11","Cell Biology: DNA Repair, Transcription, Translation, PCR, Blotting, Flow Cytometry"],
@@ -521,16 +521,16 @@ const bio=[
   ["Fatty Acids",1,"Completado"],
   ["Ketone Bodies",1,"Completado"],
   ["Ethanol",1,"Completado"],
-  ["Exercise & Starvation","curso","hoy 19/11"],
-  ["Inborn Errors","curso","hoy 19/11"],
-  ["Amino Acids","curso","hoy 19/11"],
-  ["Phe & Tyr","curso","hoy 19/11"],
-  ["Other AA","curso","hoy 19/11"],
-  ["Ammonia","curso","hoy 19/11"],
-  ["B Vitamins",0,"20/11"],
-  ["B12 & Folate",0,"20/11"],
-  ["Other Vitamins",0,"20/11"],
-  ["Lipid Metabolism",0,"20/11"],
+  ["Exercise & Starvation","curso","hoy 20/11"],
+  ["Inborn Errors","curso","hoy 20/11"],
+  ["Amino Acids","curso","hoy 20/11"],
+  ["Phe & Tyr","curso","hoy 20/11"],
+  ["Other AA","curso","hoy 20/11"],
+  ["Ammonia","curso","hoy 20/11"],
+  ["B Vitamins",0,"21/11"],
+  ["B12 & Folate",0,"21/11"],
+  ["Other Vitamins",0,"21/11"],
+  ["Lipid Metabolism",0,"21/11"],
   ["Hyperlipidemia",0,"23/11"],
   ["Lipid Drugs",0,"23/11"],
   ["Lysosomal Storage",0,"23/11"]
@@ -581,7 +581,7 @@ const H={"2026-10-31":44,"2026-11-02":73,"2026-11-03":87,"2026-11-04":4,"2026-11
 const key=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 
 /* histograma de cuadritos: 1 cuadrito = 50 respuestas; líneas META 500 y MÍNIMO 250 */
-(function(){const days=[];for(let d=new Date(2026,9,31);d<=new Date(2026,10,19);d.setDate(d.getDate()+1)){const k=key(d);days.push([k,H[k]||0,d.getDate()])}
+(function(){const days=[];const end=new Date();end.setHours(0,0,0,0);for(let d=new Date(2026,9,31);d<=end;d.setDate(d.getDate()+1)){const k=key(d);days.push([k,H[k]||0,d.getDate()])}
 const U=50,SEG=Math.max(14,Math.ceil(Math.max(...days.map(d=>d[1]))/U)),mx=SEG*U,h=document.getElementById("hist"),x=document.getElementById("histx");
 h.innerHTML=days.map((d,i)=>{const on=d[1]>0?Math.max(1,Math.round(d[1]/U)):0,c=i==days.length-1?"last":d[1]>=500?"goal":d[1]>=250?"mid":"lo";let q="";for(let j=0;j<SEG;j++)q+=`<i class="${j<on?'on':''}"></i>`;return `<div class="col ${c}" title="${d[0]}: ${d[1]}">${q}</div>`}).join("")
 +`<div class="ln g" style="bottom:${500/mx*100}%"><span>META 500</span></div><div class="ln m" style="bottom:${250/mx*100}%"><span>MÍNIMO 250</span></div>`;
@@ -615,7 +615,7 @@ document.getElementById("cd-ex").textContent=D.examen?dd(D.examen):"—";documen
 document.getElementById("hitos").innerHTML=plan.filter(r=>r[2]!==1).slice(0,4).map(r=>`<div class="hito"><span class="f">${r[0]}</span><span>${r[1]}</span></div>`).join("")||"—";
 
 /* 00 Anki hoy · Again (solo valores ya observados; null = "—") */
-const ANKI_HOY={reviews:172, again:10, again_cards:10, again_pct:6};
+const ANKI_HOY={reviews:null, again:null, again_cards:null, again_pct:null};
 (function(){
   const el=document.getElementById("anki-again"); if(!el) return;
   const a=ANKI_HOY, V=x=>(x===null||x===undefined||x==="")?"—":x;
@@ -626,9 +626,9 @@ const ANKI_HOY={reviews:172, again:10, again_cards:10, again_pct:6};
 
 /* 01 Preguntas hoy · datos editables (solo valores ya observados; null = "—"; hechas 0 → 0, sin % inventado) */
 const TODAY_Q={
-  fecha:"2026-11-19",
+  fecha:"2026-11-20",
   bb:{hechas:null, correctas:null, incorrectas:null, pct:null, quizzes:[]},
-  uw:{hechas:20, correctas:10, incorrectas:10, pct:50}
+  uw:{hechas:null, correctas:null, incorrectas:null, pct:null}
 };
 (function(){
   const el=document.getElementById("today-q"); if(!el) return;
