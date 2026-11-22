@@ -625,7 +625,7 @@ const ANKI_HOY={reviews:837, again:85, again_cards:71, again_pct:10};
 const TODAY_Q={
   fecha:"2026-11-21",
   bb:{hechas:null, correctas:null, incorrectas:null, pct:null, quizzes:[]},
-  uw:{hechas:null, correctas:null, incorrectas:null, pct:null}
+  uw:{hechas:0, correctas:null, incorrectas:null, pct:null}
 };
 (function(){
   const el=document.getElementById("today-q"); if(!el) return;
@@ -677,6 +677,20 @@ ${b.nota?`<p class="note">${b.nota}</p>`:""}`})();
    La rutina nocturna agrega una entrada por día: REPORTS["AAAA-MM-DD"] = {fecha, anki, preg, bloques, base, manana}
    preg = {hoy, pct_hoy, total, pct_total, bb:{hoy,pct_hoy,total,pct_total}, uw:{...}, hist, estado}; combinados null → se calculan de bb + uw; hoy_min:true → muestra "≥" */
 const REPORTS={
+  "2026-11-21":{
+  fecha:"sáb 21/11",
+  anki:{hechas:837, meta:500, min:250, nuevas:0, repasos:837, vencidas:23, estado:"ok"},
+  preg:{hoy:null, pct_hoy:null, total:null, pct_total:null,
+        bb:{hoy:null, pct_hoy:null, total:140, pct_total:84.4},
+        uw:{hoy:0, pct_hoy:null, total:140, pct_total:17},
+        hist:null, estado:"sd"},
+  bloques:[
+    {n:"Videos B&B", valor:null, detalle:"sin dato (sesión cerrada en B&B)", estado:"sd"},
+    {n:"UWorld",     valor:0, detalle:"0 preguntas hechas hoy; tests creados sin iniciar", estado:"no"}
+  ],
+  base:"Anki cumplido (837 vs 500) · UWorld sin respuestas hoy · B&B sin dato (sesión cerrada)",
+  manana:"Domingo: 500 Anki + repaso ligero, sin videos nuevos"
+},
   "2026-11-20":{
   fecha:"vie 20/11",
   anki:{hechas:null, meta:500, min:250, nuevas:null, repasos:null, vencidas:null, estado:"sd"},
