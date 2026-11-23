@@ -622,7 +622,7 @@ const ANKI_HOY={reviews:null, again:null, again_cards:null, again_pct:null};
 /* 01 Preguntas hoy · datos editables (solo valores ya observados; null = "—"; hechas 0 → 0, sin % inventado) */
 const TODAY_Q={
   fecha:"2026-11-22",
-  bb:{hechas:null, correctas:null, incorrectas:null, pct:null, quizzes:[]},
+  bb:{hechas:0, correctas:null, incorrectas:null, pct:null, quizzes:[]},
   uw:{hechas:null, correctas:null, incorrectas:null, pct:null}
 };
 (function(){
@@ -654,7 +654,7 @@ const PERF={
       sistemas:[], hist:[{t:"#2 19/11", pct:50}]},
   bb:{hechas:154, total:3701, alcance:"Total B&B", pct_quiz:84.4,
       nota:"Lectura 22/11 07:12: Biochem 18/28, acumulado 154/3701 a 84.4%. El 21/11: Inborn Errors 5/5 y Amino Acids 4/4. Preguntas Biochem 97/140 a 89.7% es el último desglose detallado (18/11); no se re-declaró el 22/11. Cell Biology y el resto: 0%.",
-      materias:[{n:"Biochemistry", hechas:97, de:140, pct:89.7}], hist:[]}
+      materias:[{n:"Biochemistry", hechas:80, de:140, pct:88.8},{n:"Basic Pharmacology", hechas:23, de:40, pct:77.5},{n:"Genetics", hechas:51, de:79, pct:83.5}], hist:[]}
 };
 (function(){const V=x=>(x===null||x===undefined||x==="")?"—":x,P=x=>(x===null||x===undefined)?"—":x+"%";
 const leds=(arr,lab,val,mx)=>{if(!arr||!arr.length)return '<div class="pf-empty">—</div>';const S=10,m=mx||Math.max(1,...arr.map(val));return `<div class="pf-h">${arr.slice(-10).map(d=>{const on=val(d)?Math.max(1,Math.round(val(d)/m*S)):0;let c="";for(let i=0;i<S;i++)c+=`<i class="${i<on?'on':''}"></i>`;return `<div><div class="c">${c}</div><span>${V(lab(d))}</span></div>`}).join("")}</div>`};
@@ -675,6 +675,20 @@ ${b.nota?`<p class="note">${b.nota}</p>`:""}`})();
    La rutina nocturna agrega una entrada por día: REPORTS["AAAA-MM-DD"] = {fecha, anki, preg, bloques, base, manana}
    preg = {hoy, pct_hoy, total, pct_total, bb:{hoy,pct_hoy,total,pct_total}, uw:{...}, hist, estado}; combinados null → se calculan de bb + uw; hoy_min:true → muestra "≥" */
 const REPORTS={
+  "2026-11-22":{
+  fecha:"dom 22/11",
+  anki:{hechas:null, meta:500, min:250, nuevas:null, repasos:null, vencidas:329, estado:"sd"},
+  preg:{hoy:null, pct_hoy:null, total:null, pct_total:null,
+        bb:{hoy:0, pct_hoy:null, total:154, pct_total:84.4},
+        uw:{hoy:null, pct_hoy:null, total:140, pct_total:17},
+        hist:null, estado:"sd"},
+  bloques:[
+    {n:"Videos B&B", valor:null, detalle:"domingo sin videos nuevos; sin dato de marcados hoy", estado:"sd"},
+    {n:"UWorld",     valor:null, detalle:"sin dato (sesión expirada); tests 3 y 4 sin iniciar a las 18:20", estado:"sd"}
+  ],
+  base:"Mac apagado: Anki sin dato · B&B sin quizzes hoy (0) · UWorld sin dato (sesión expirada)",
+  manana:"Lunes: Phenylalanine and Tyrosine, Other Amino Acids, Ammonia · 500 Anki · 30 min B&B preguntas · 10–15 UWorld"
+},
   "2026-11-21":{
   fecha:"sáb 21/11",
   anki:{hechas:837, meta:500, min:250, nuevas:0, repasos:837, vencidas:23, estado:"ok"},
