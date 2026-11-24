@@ -5,7 +5,7 @@
   index_backup_pre_cards_2026-11-17.html (versión teenage engineering).
   Estilo: capa "teenage engineering" al final del <style> (paneles con borde, numeración 00–10, marcadores ((n))).
   Regla: en pantalla NO se muestran notas de fuente/procedencia; solo el timestamp de #upd.
-  Fuentes (solo para mantenimiento): Anki = Mac "Eduardos MacBook Air" conectado; AnkiConnect v6 a las 24/11 07:09 (una sola llamada multi). reviews=0, unique=0, new=0, review_cards=0, introduced=0, rated:1:1=0, again presses=0 (stats HTML: "No cards have been studied today."). is:due=480 (AnKing 232, Eduche 248). getDeckStats: AnKing new 50 / learn 3 / review 229; Eduche new 50 / learn 0 / review 248. ANKI_HOY reviews/again/again_cards=0, again_pct=null. H["2026-11-24"]=0. H["2026-11-22"] y H["2026-11-23"] omitidos (sin conteo verificado de revisiones esos días).
+  Fuentes (solo para mantenimiento): Anki = Mac "Eduardos MacBook Air" conectado; AnkiConnect v6 a las 24/11 07:09 (una sola llamada multi). reviews=0, unique=0, new=0, review_cards=0, introduced=0, rated:1:1=0, again presses=0 (stats HTML: "No cards have been studied today."). is:due=480 (AnKing 232, Eduche 248). getDeckStats: AnKing new 50 / learn 3 / review 229; Eduche new 50 / learn 0 / review 248. ANKI_HOY reviews/again/again_cards=0, again_pct=null. H["2026-11-22"]=274, H["2026-11-23"]=196, H["2026-11-24"]=0 (conteo AnkiConnect 24/11 ~16:30).
   B&B = no se pudo releer a las 24/11 07:09: https://www.boardsbeyond.com/dashboard redirigió a https://www.boardsbeyond.com/login. Cifras en pantalla = última lectura verificada 23/11 22:30: 174 de 3701, quiz 84.0%, Step 1-P 7%. Biochem 21/28, 141/140 a 87% (Quizzes 87.2%), siguiente B12 and Folate. Quizzes del 23/11: Phenylalanine and Tyrosine 3/5, Other Amino Acids 4/5 (más un 0/5 abierto sin responder, no tocado), Ammonia 3/5 luego 5/5, B Vitamins 5/5. Día 23/11: 25 respondidas, 20 correctas. TODAY_Q.bb = null (no se leyó el historial a las 24/11 07:09).
   UWorld = lectura 24/11 07:09 (Launch STEP 1 QBank solamente): QBank 159/3661, Question Score 17%, Test Count 2/6. Ronda actual: único completado #2 19/11 10/20 (50%). Sin iniciar: Test 3 (20 q), Test 4 (20 q), Test 5 - 23.11.2026 (19 q) y Test Semanal 1 (40 q). 0 preguntas contestadas el 24/11. TODAY_Q.uw = 0. UWSA 1–3 sin activar.
   Plan/horario: martes 24/11 = 7h17 (Anki 500, videos B&B 2h17 para cerrar Biochem: B12 & Folate, Other Vitamins, Lipid Metabolism, Hyperlipidemia, Lipid Drugs, Lysosomal Storage; si B Vitamins no está marcada, esa primero; 30 min preguntas B&B; 1h UWorld Test 3 de 20 q Tutor). Biochem en pantalla 21/28 según lectura 23/11 22:30 (no reconfirmado a las 24/11 07:09).
@@ -578,7 +578,7 @@ function draw(){document.getElementById("seg").innerHTML=F.map(x=>`<button class
 /* fechas límite (cuenta regresiva en días, calculada) */
 const D={examen:"2027-04-30",uworld:"2027-04-29"};
 
-const H={"2026-10-31":44,"2026-11-02":73,"2026-11-03":87,"2026-11-04":4,"2026-11-05":229,"2026-11-07":226,"2026-11-10":205,"2026-11-11":310,"2026-11-12":346,"2026-11-13":303,"2026-11-14":552,"2026-11-15":239,"2026-11-16":430,"2026-11-17":635,"2026-11-18":624,"2026-11-19":172,"2026-11-20":0,"2026-11-21":837,"2026-11-24":0};
+const H={"2026-10-31":44,"2026-11-02":73,"2026-11-03":87,"2026-11-04":4,"2026-11-05":229,"2026-11-07":226,"2026-11-10":205,"2026-11-11":310,"2026-11-12":346,"2026-11-13":303,"2026-11-14":552,"2026-11-15":239,"2026-11-16":430,"2026-11-17":635,"2026-11-18":624,"2026-11-19":172,"2026-11-20":0,"2026-11-21":837,"2026-11-22":274,"2026-11-23":196,"2026-11-24":0};
 const key=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 
 /* histograma de cuadritos: 1 cuadrito = 50 respuestas; líneas META 500 y MÍNIMO 250 */
@@ -681,6 +681,20 @@ ${b.nota?`<p class="note">${b.nota}</p>`:""}`})();
    La rutina nocturna agrega una entrada por día: REPORTS["AAAA-MM-DD"] = {fecha, anki, preg, bloques, base, manana}
    preg = {hoy, pct_hoy, total, pct_total, bb:{hoy,pct_hoy,total,pct_total}, uw:{...}, hist, estado}; combinados null → se calculan de bb + uw; hoy_min:true → muestra "≥" */
 const REPORTS={
+  "2026-11-23":{
+  fecha:"lun 23/11",
+  anki:{hechas:196, meta:500, min:250, nuevas:50, repasos:75, vencidas:null, estado:"no"},
+  preg:{hoy:null, pct_hoy:null, total:null, pct_total:null,
+        bb:{hoy:25, pct_hoy:80, total:174, pct_total:84.0},
+        uw:{hoy:0, pct_hoy:null, total:159, pct_total:17},
+        hist:null, estado:"medio"},
+  bloques:[
+    {n:"Videos B&B", valor:"3 videos: Phenylalanine and Tyrosine, Other Amino Acids, Ammonia", detalle:"B Vitamins visto, no marcado completo · Biochem 18/28 → 21/28", estado:"ok"},
+    {n:"UWorld",     valor:"0 hoy", detalle:"Test 5 (19 q) creado; Tests 3, 4 y 5 sin iniciar; 159/3661 a 17%", estado:"no"}
+  ],
+  base:"Biochem 18/28 → 21/28 · Anki 196 de 500 (mín 250) · UWorld 0 hoy (Test 5 creado, sin iniciar)",
+  manana:"B Vitamins (terminar), B12 and Folate, Other Vitamins, Lipid Metabolism, Hyperlipidemia, Lipid Drugs, Lysosomal Storage Diseases · 30 min B&B preguntas · UWorld Test 3 - 21.11.2026 (20 q, Tutor) · 500 Anki"
+},
   "2026-11-22":{
   fecha:"dom 22/11",
   anki:{hechas:null, meta:500, min:250, nuevas:null, repasos:null, vencidas:329, estado:"sd"},
