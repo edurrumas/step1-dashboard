@@ -339,7 +339,7 @@ details summary .lbl{margin-left:auto}
   <div><div class="brand"><span><i>●</i> step&nbsp;1</span><span>usmle</span><span>rev. 2026</span></div><h1>Inicio</h1></div>
   <div class="top-meta">
     <button type="button" id="refresh" aria-label="Refresh">↻ REFRESH</button>
-    <span id="upd">Actualizado 24/11 18:00</span>
+    <span id="upd">Actualizado 24/11 22:35</span>
   </div>
 </header>
 
@@ -681,6 +681,20 @@ ${b.nota?`<p class="note">${b.nota}</p>`:""}`})();
    La rutina nocturna agrega una entrada por día: REPORTS["AAAA-MM-DD"] = {fecha, anki, preg, bloques, base, manana}
    preg = {hoy, pct_hoy, total, pct_total, bb:{hoy,pct_hoy,total,pct_total}, uw:{...}, hist, estado}; combinados null → se calculan de bb + uw; hoy_min:true → muestra "≥" */
 const REPORTS={
+  "2026-11-24":{
+  fecha:"mar 24/11",
+  anki:{hechas:466, meta:500, min:250, nuevas:0, repasos:246, vencidas:null, estado:"medio"},
+  preg:{hoy:null, pct_hoy:null, total:null, pct_total:null,
+        bb:{hoy:null, pct_hoy:null, total:179, pct_total:84.3},
+        uw:{hoy:null, pct_hoy:null, total:159, pct_total:17},
+        hist:null, estado:"sd"},
+  bloques:[
+    {n:"Videos B&B", valor:null, detalle:"Edu dice que vio B Vitamins, B12 and Folate y Other Vitamins; el sitio sigue en Biochem 21/28 y esta noche no pude releerlo (login vencido)", estado:"sd"},
+    {n:"UWorld",     valor:null, detalle:"Sesión vencida esta noche; a las 18:00 iba 0 hoy; 159/3661 a 17%; Tests 3, 4 y 5 sin iniciar", estado:"sd"}
+  ],
+  base:"Biochem 21/28 en el sitio (videos de vitaminas declarados, sin marcar) · Anki 466 de 500 (dato de las 18:00, mín 250 superado) · UWorld sin dato de hoy",
+  manana:"B12 and Folate, Other Vitamins (si no están marcados), Lipid Metabolism, Hyperlipidemia, Lipid Drugs, Lysosomal Storage Diseases · 30 min B&B preguntas · UWorld Test 3 - 21.11.2026 (20 q, Tutor) · 500 Anki"
+},
   "2026-11-23":{
   fecha:"lun 23/11",
   anki:{hechas:196, meta:500, min:250, nuevas:50, repasos:75, vencidas:null, estado:"no"},
